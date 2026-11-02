@@ -32,7 +32,7 @@ h4,
 h5,
 h6 {
     text-transform: uppercase;
-    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: "Anek Bangla","Helvetica Neue",Helvetica,Arial,sans-serif;
     font-weight: 700;
 }
 
@@ -91,15 +91,25 @@ header .container {
     padding-bottom: 50px;
 }
 
+/* Picture + text wrapper. Phones: picture on top, text below */
+header .header-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
 header img {
     display: block;
-    margin: 0 auto 20px;
+    margin: 0;
+    flex-shrink: 0;
 }
 
 header .intro-text .name {
     display: block;
     text-transform: uppercase;
-    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: "Anek Bangla","Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 2em;
     font-weight: 700;
 }
@@ -109,18 +119,28 @@ header .intro-text .skills {
     font-weight: 300;
 }
 
-@media(min-width:768px) {
+@media(min-width:500px) {
     header .container {
-        padding-top: 200px;
-        padding-bottom: 100px;
+        padding-top: 110px;      /* must be larger than the top bar's height */
+        padding-bottom: 50px;
+    }
+
+    /* Wider screens: picture left, text right */
+    header .header-flex {
+        flex-direction: row;
+        gap: 50px;               /* space between picture and text */
+    }
+
+    header .intro-text {
+        text-align: left;
     }
 
     header .intro-text .name {
-        font-size: 4.75em;
+        font-size: 2.75em;
     }
 
     header .intro-text .skills {
-        font-size: 1.75em;
+        font-size: 1.25em;
     }
 }
 
@@ -150,7 +170,7 @@ header .intro-text .skills {
 
 .navbar {
     text-transform: uppercase;
-    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: "Anek Bangla","Helvetica Neue",Helvetica,Arial,sans-serif;
     font-weight: 700;
 }
 
@@ -481,4 +501,275 @@ footer .footer-below {
 .modal.fade.in {
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
+}
+
+
+/* ---------- Additions for multi-page layout ---------- */
+html {
+    scroll-behavior: smooth;
+}
+
+section[id] {
+    scroll-margin-top: 70px;
+}
+
+/* Smaller banner used on Projects / Articles / single pages */
+header.page-header .container {
+    padding-top: 110px;
+    padding-bottom: 40px;
+}
+
+header.page-header .intro-text .name {
+    margin: 0;
+    font-size: 2.25em;
+}
+
+@media(min-width:768px) {
+    header.page-header .container {
+        padding-top: 150px;
+        padding-bottom: 60px;
+    }
+
+    header.page-header .intro-text .name {
+        font-size: 3.5em;
+    }
+}
+
+/* Title under each project thumbnail */
+.portfolio-title {
+    margin: 10px 0 25px;
+    font-family:"Anek Bangla","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 700;
+}
+
+/* Text pages (single project, single article, article list) */
+section.content-page {
+    padding: 60px 0 80px;
+}
+
+section.content-page img {
+    margin-bottom: 25px;
+}
+
+section.content-page .item-details {
+    margin: 30px 0;
+}
+
+.article-preview {
+    margin-bottom: 40px;
+}
+
+.article-preview h3 {
+    margin-bottom: 5px;
+}
+
+.article-date {
+    font-size: 15px;
+    color: #7b8a8b;
+}
+
+
+/* ---------- Overall size: change this one number ---------- */
+:root {
+    --site-zoom: 1;
+}
+
+body {
+    zoom: var(--site-zoom);
+}
+
+/* ---------- Top bar: menu button left, name right ---------- */
+.nav-bar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* Full-width bar: this padding is the gap between the screen edge and the
+       menu button (left) / your name (right). Smaller number = closer to the edge. */
+    padding: 0 25px;
+}
+
+/* Bootstrap's clearfix pseudo-elements would act as extra flex items */
+.nav-bar-inner:before,
+.nav-bar-inner:after {
+    display: none;
+}
+
+.nav-bar-inner .navbar-brand {
+    float: none;
+    margin: 0;
+    padding-right: 0;
+    text-align: right;
+}
+
+.menu-toggle {
+    margin: 0;
+    padding: 13px 15px;
+    background: transparent;
+    border: 1px solid #1a242f;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.menu-toggle:focus {
+    outline: 0;
+}
+
+.menu-toggle .icon-bar {
+    display: block;
+    width: 32px;
+    height: 3px;
+    border-radius: 2px;
+    background-color: #fff;
+}
+
+.menu-toggle .icon-bar + .icon-bar {
+    margin-top: 6px;
+}
+
+.menu-toggle:hover {
+    background-color: rgba(255, 255, 255, .1);
+}
+
+/* ---------- Slide-out menu ---------- */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    background: rgba(0, 0, 0, .5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s ease, visibility .3s;
+}
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+    width: 280px;
+    max-width: 85%;
+    padding: 70px 0 30px;
+    overflow-y: auto;
+    background: #{{ site.color.secondary }};
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform .3s ease, visibility .3s;
+}
+
+body.menu-open {
+    overflow: hidden;
+}
+
+body.menu-open .menu-overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+body.menu-open .side-menu {
+    transform: translateX(0);
+    visibility: visible;
+}
+
+.menu-close {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-size: 40px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.menu-close:focus {
+    outline: 0;
+}
+
+.side-menu-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.side-menu-list a {
+    display: block;
+    padding: 16px 30px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: "Anek Bangla","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+    border-left: 4px solid transparent;
+}
+
+.side-menu-list a:hover,
+.side-menu-list a:focus {
+    background: #{{ site.color.secondary-dark }};
+    color: #{{ site.color.primary }};
+    outline: 0;
+}
+
+.side-menu-list .active a {
+    color: #{{ site.color.primary }};
+    border-left-color: #{{ site.color.primary }};
+}
+
+/* ---------- Footer (links only) ---------- */
+footer .footer-above {
+    padding: 50px 0 35px;
+}
+
+.footer-links {
+    margin-bottom: 25px;
+}
+
+.footer-credit {
+    margin: 0;
+    font-size: 14px;
+    opacity: .75;
+}
+
+.footer-credit a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Headings and lists inside project / article text */
+section.content-page h2 {
+    margin: 40px 0 15px;
+    font-size: 1.9em;
+    text-transform: none;
+}
+
+section.content-page h3 {
+    margin: 30px 0 10px;
+    text-transform: none;
+}
+
+section.content-page ul,
+section.content-page ol {
+    font-size: 20px;
+}
+
+/* Hide the scroll-to-top button while the menu is open */
+body.menu-open .scroll-top {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .navbar-fixed-top {
+        padding: 10px 0;
+    }
+
+    .navbar-fixed-top .navbar-brand {
+        font-size: 1.5em;
+    }
 }

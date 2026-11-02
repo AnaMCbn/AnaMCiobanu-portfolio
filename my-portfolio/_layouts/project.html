@@ -1,0 +1,40 @@
+---
+layout: default
+---
+<header class="page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="intro-text">
+          <h1 class="name">{{ page.title }}</h1>
+          <hr class="star-light" />
+          {% if page.category %}<span class="skills">{{ page.category }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="content-page">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2">
+        {% if page.img %}
+        <img src="{{ '/img/portfolio/' | append: page.img | relative_url }}" class="img-responsive img-centered" alt="{{ page.alt | default: page.title }}">
+        {% endif %}
+
+        {% if page.description %}<p class="lead">{{ page.description }}</p>{% endif %}
+
+        {{ content }}
+
+        <ul class="list-inline item-details">
+          {% if page.client %}<li>Client: <strong>{{ page.client }}</strong></li>{% endif %}
+          {% if page.project-date %}<li>Date: <strong>{{ page.project-date }}</strong></li>{% endif %}
+          {% if page.category %}<li>Service: <strong>{{ page.category }}</strong></li>{% endif %}
+        </ul>
+
+        <a href="{{ '/projects/' | relative_url }}" class="btn btn-default"><i class="fa fa-arrow-left"></i> All projects</a>
+      </div>
+    </div>
+  </div>
+</section>

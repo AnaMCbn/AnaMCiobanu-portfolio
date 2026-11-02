@@ -1,35 +1,31 @@
-<!-- Navigation -->
+<!-- Top bar: menu button on the left, your name (links to the home header) on the right -->
 <nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header page-scroll">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#page-top">{{ site.title }}</a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-right">
-        <li class="hidden">
-          <a href="#page-top"></a>
-        </li>
-        <li class="page-scroll">
-          <a href="#portfolio">Portfolio</a>
-        </li>
-        <li class="page-scroll">
-          <a href="#about">About</a>
-        </li>
-        <li class="page-scroll">
-          <a href="#contact">Contact</a>
-        </li>
-      </ul>
-    </div>
-    <!-- /.navbar-collapse -->
+  <div class="nav-bar-inner">
+    <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-controls="side-menu" aria-expanded="false">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="{{ '/#page-top' | relative_url }}">{{ site.title }}</a>
   </div>
-  <!-- /.container-fluid -->
 </nav>
+
+<!-- Slide-out menu (opens from the left) -->
+<div class="menu-overlay" id="menu-overlay"></div>
+<aside class="side-menu" id="side-menu" aria-label="Main menu" aria-hidden="true">
+  <button type="button" class="menu-close" id="menu-close" aria-label="Close menu">&times;</button>
+  <ul class="side-menu-list">
+    <li{% if page.url == '/' %} class="active"{% endif %}>
+      <a href="{{ '/#page-top' | relative_url }}">About</a>
+    </li>
+    <li{% if page.url contains '/projects' %} class="active"{% endif %}>
+      <a href="{{ '/projects/' | relative_url }}">Projects</a>
+    </li>
+    <li{% if page.url contains '/articles' %} class="active"{% endif %}>
+      <a href="{{ '/articles/' | relative_url }}">Articles</a>
+    </li>
+    <li{% if page.url contains '/contact' %} class="active"{% endif %}>
+      <a href="{{ '/contact/' | relative_url }}">Contact</a>
+    </li>
+  </ul>
+</aside>

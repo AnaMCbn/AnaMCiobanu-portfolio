@@ -1,0 +1,32 @@
+---
+layout: default
+title: Articles
+---
+<header class="page-header">
+  <div class="container">
+    <div class="intro-text">
+      <h1 class="name">Articles</h1>
+      <hr class="star-light" />
+    </div>
+  </div>
+</header>
+
+<section class="content-page">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2">
+        {% assign articles = site.posts | where: "layout", "post" %}
+        {% for post in articles %}
+        <article class="article-preview">
+          <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+          <p class="article-date">{{ post.date | date: "%B %-d, %Y" }}</p>
+          <p>{{ post.excerpt | strip_html | strip | truncate: 220 }}</p>
+          <a href="{{ post.url | relative_url }}">Read article &rarr;</a>
+        </article>
+        {% else %}
+        <p class="text-center">No articles yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,71 +1,64 @@
-# Site settings
-title: Freelancer
-email: your-email@domain.com
-url: https://github.com/jeromelachaud/freelancer-theme
-description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
-keywords: "your keywords, separated by commas"
-skills: "Web Developer - Graphic Artist - User Experience Designer"
-meta_author: LastName FirstName
+# ---------- Site settings (edit these first) ----------
+title: Your Name
+email: you@example.com
+description: "A short description of you and your work. It appears in Google results and link previews."
+keywords: "portfolio, your field, your city"
+skills: "Web Developer - Designer - Writer"
+meta_author: Your Name
 
-# Google webmaster tools
+# Where the site lives. Leave both empty while working locally.
+#  - custom domain or username.github.io:  url: "https://yourname.com"   baseurl: ""
+#  - GitHub project page (user.github.io/repo):  url: "https://user.github.io"   baseurl: "/repo"
+url: ""
+baseurl: ""
+
+# Search engine verification (optional)
 google_verify:
-
-# https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
 bing_verify:
 
-# Contact form:
-# - static : pass through formspree.io to validate email sending
-# - disqus : replace contact form by disqus thread
-# - comment the line below if you want to stick with the default PHP contact form
-contact: static
-
-# If you use disqus you need disqus shortname
-# https://help.disqus.com/customer/portal/articles/466208
-disqus_shortname: myshortname
-
-# Color settings (hex-codes without the leading hash-tag)
+# ---------- Colors (hex codes without the #) ----------
 color:
-  primary: 18bc9c #80B3FF
-  primary-rgb: "24,288,156" #"128,179,255"
-  secondary: 2c3e50 #FD6E8A
-  secondary-dark: 233140 #A2122F
+  primary: 18bc9c
+  primary-rgb: "24,188,156"   # must match "primary" in RGB (18bc9c = 24,188,156)
+  secondary: 2c3e50
+  secondary-dark: 233140
 
-# Footer settings
-footer:
-  copyright: Dr. Henry Jekyll
-  location: Location
-  social: Around the Web
-  credits: Credits
+# ---------- Footer ----------
+# Icon-only links shown in the big footer. Entries with an empty url are hidden.
+# "icon" is any Font Awesome class: "fa-brands fa-github", "fa-solid fa-envelope", ...
+footer_links:
+  - title: Email
+    icon: fa-solid fa-envelope
+    url: anamciobanu.dev@gmail.com
+  - title: GitHub
+    icon: fa-brands fa-github
+    url: https://github.com/AnaMCbn
+  - title: LinkedIn
+    icon: fa-brands fa-linkedin
+    url: https://www.linkedin.com
 
-# Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
-social:
-  - title: twitter
-    url: http://twitter.com/jekyllrb
-  - title: facebook
-    url:
-  - title: stack-overflow
-    url: http://stackoverflow.com/questions/tagged/jekyll
-  - title: bitbucket
-    url: http://bitbucket.org/jekyll
-  - title: github
-    url: http://github.com/jekyll
+# Line at the very bottom of every page
+theme_credit:
+  name: Freelancer Jekyll theme
+  url: https://github.com/jeromelachaud/freelancer-theme
 
-# Postal address (add as many lines as necessary)
-address:
-  - line: 3481 Melrose Place
-  - line: Beverly Hills, CA 90210
-
-# Credits content
-credits: 'Freelancer is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.'
-
-# Build settings
+# ---------- Build settings ----------
 markdown: kramdown
-permalink: pretty
 
-#for posts
-defaults:
-  - scope:
-      path: ""
-      type: "posts"
-    values:
-      permalink: ""
+# Articles are the regular posts in _posts/
+permalink: /articles/:title/
+
+# Projects live in _projects/ and get their own pages
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name/
+
+# Files Jekyll should not copy into the built site
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - LICENCE
+  - node_modules
+  - vendor
