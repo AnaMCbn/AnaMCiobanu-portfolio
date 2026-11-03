@@ -1,4 +1,11 @@
-<!-- Top bar: menu button on the left, your name (links to the home header) on the right -->
+{% comment %}
+  TOP BAR + SLIDE-OUT MENU, on every page.
+  - Left: the three-bar menu button. Right: your name (links to the top of the home page)
+    and the round link buttons.
+  - The link buttons come from "footer_links" in _config.yml (an entry with an empty url is hidden).
+  - The menu entries (About, Projects, Articles, Contact) are written by hand at the bottom of this file.
+  - Opening / closing the menu is done by js/site.js; the look is in main.css (sections 3 and 4).
+{% endcomment %}
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="nav-bar-inner">
     <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-controls="side-menu" aria-expanded="false">
@@ -6,15 +13,28 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="{{ '/#page-top' | relative_url }}">{{ site.title }}</a>
+
+    <div class="nav-right">
+      <a class="navbar-brand" href="{{ '/#page-top' | relative_url }}">{{ site.nav_name | default: site.title }}</a>
+      <ul class="nav-social">
+        {% for link in site.footer_links %}
+        {% if link.url and link.url != "" %}
+        <li>
+          <a href="{{ link.url }}" class="nav-social-btn" aria-label="{{ link.title }}" title="{{ link.title }}"{% unless link.url contains 'mailto:' %} target="_blank" rel="noopener"{% endunless %}><i class="{{ link.icon }}"></i></a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
   </div>
 </nav>
 
-<!-- Slide-out menu (opens from the left) -->
+{% comment %} The dark layer behind the menu, and the menu panel itself (hidden until the button is clicked) {% endcomment %}
 <div class="menu-overlay" id="menu-overlay"></div>
 <aside class="side-menu" id="side-menu" aria-label="Main menu" aria-hidden="true">
   <button type="button" class="menu-close" id="menu-close" aria-label="Close menu">&times;</button>
   <ul class="side-menu-list">
+    {% comment %} To add or rename an entry, edit the list items below. "active" highlights the current page. {% endcomment %}
     <li{% if page.url == '/' %} class="active"{% endif %}>
       <a href="{{ '/#page-top' | relative_url }}">About</a>
     </li>

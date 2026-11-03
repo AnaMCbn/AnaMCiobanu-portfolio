@@ -1,0 +1,55 @@
+---
+layout: default
+title: Tags
+---
+{% comment %}
+  THE TAGS PAGE (address: /tags/). A row of tag chips, then ALL projects and articles as cards.
+  js/tags.js hides the cards that do not have the tag in the address, e.g. /tags/#web.
+  Without JavaScript every card is simply shown. Tag colors and labels: _data/tags.yml.
+{% endcomment %}
+<header class="page-header">
+  <div class="container">
+    <div class="intro-text">
+      <h1 class="name">Tags</h1>
+    </div>
+  </div>
+</header>
+
+{% comment %} Collect every tag used by a project or an article {% endcomment %}
+{% assign all_tags = "" | split: "" %}
+{% for project in site.projects %}
+  {% for t in project.tags %}{% assign all_tags = all_tags | push: t %}{% endfor %}
+{% endfor %}
+{% assign articles = site.posts | where: "layout", "post" %}
+{% for article in articles %}
+  {% for t in article.tags %}{% assign all_tags = all_tags | push: t %}{% endfor %}
+{% endfor %}
+{% assign all_tags = all_tags | uniq | sort %}
+
+<section class="home-section list-page">
+  <div class="container">
+
+    {% comment %} Click a tag to show only the projects and articles that have it {% endcomment %}
+    <ul class="tag-filter" id="tag-filter">
+      <li><a class="tag" href="{{ '/tags/' | relative_url }}" data-tag="">All</a></li>
+      {% for tag in all_tags %}
+      {% assign tag_info = site.data.tags[tag] %}
+      <li><a class="tag" href="{{ '/tags/#' | append: tag | relative_url }}" data-tag="{{ tag }}"{% if tag_info.color %} style="--tag-color: #{{ tag_info.color }}"{% endif %}>{{ tag_info.label | default: tag }}</a></li>
+      {% endfor %}
+    </ul>
+
+    <div class="tag-block">
+      <div class="section-head"><h2>Projects</h2><hr class="section-line"></div>
+      {% include portfolio_grid.html %}
+    </div>
+
+    <div class="tag-block">
+      <div class="section-head"><h2>Articles</h2><hr class="section-line"></div>
+      {% include article_grid.html %}
+    </div>
+
+    <p id="tag-empty" hidden>Nothing has this tag yet.</p>
+  </div>
+</section>
+
+<script src="{{ '/js/tags.js' | relative_url }}"></script>

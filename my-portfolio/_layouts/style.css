@@ -1,2 +1,7 @@
-{% include css/bootstrap.min.css %}
+{% comment %}
+  Glues the two stylesheets together into one file, in this order:
+    1. bootstrap.min.css  (Bootstrap / Flatly: grid, buttons, base look; a third-party file, best left alone)
+    2. main.css           (everything specific to this site; it comes second so it can override Bootstrap)
+  The colors in both files are filled in from "color:" in _config.yml.
+{% endcomment %}{% include css/bootstrap.min.css %}
 {% include css/main.css %}

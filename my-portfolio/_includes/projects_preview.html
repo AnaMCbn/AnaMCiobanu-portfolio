@@ -1,17 +1,18 @@
-<!-- Projects preview (home page) -->
-<section id="portfolio">
-  <div class="container portfolio-flex-grid">
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <h2>Projects</h2>
-        <hr class="star-primary">
-      </div>
+{% comment %}
+  HOME PAGE: the "Projects" section = the newest 3 projects + a "Read more" button.
+  - To show more or fewer cards, change limit=3 below.
+  - Cards: _includes/card.html.  Projects: the files in _projects/.
+  - Title row, line and spacing: main.css section 7.
+{% endcomment %}
+<section id="projects" class="home-section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Projects</h2>
+      <hr class="section-line">
     </div>
     {% include portfolio_grid.html limit=3 %}
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <a href="{{ '/projects/' | relative_url }}" class="btn btn-success btn-lg">Read more</a>
-      </div>
+    <div class="section-more">
+      <a href="{{ '/projects/' | relative_url }}" class="btn btn-main btn-lg">Read more</a>
     </div>
   </div>
 </section>

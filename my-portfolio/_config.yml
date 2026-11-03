@@ -1,64 +1,112 @@
-# ---------- Site settings (edit these first) ----------
-title: Your Name
-email: you@example.com
-description: "A short description of you and your work. It appears in Google results and link previews."
-keywords: "portfolio, your field, your city"
-skills: "Web Developer - Designer - Writer"
-meta_author: Your Name
+# =====================================================================
+# _config.yml  -  the main settings of the site
+#
+# IMPORTANT: Jekyll only reads this file when it starts. After you change it,
+# stop `bundle exec jekyll serve` (Ctrl+C) and start it again, then hard refresh
+# the browser (Ctrl+F5).
+# =====================================================================
 
-# Where the site lives. Leave both empty while working locally.
-#  - custom domain or username.github.io:  url: "https://yourname.com"   baseurl: ""
-#  - GitHub project page (user.github.io/repo):  url: "https://user.github.io"   baseurl: "/repo"
+
+# ---------------------------------------------------------------------
+# 1. ABOUT YOU
+# ---------------------------------------------------------------------
+
+# Your name. Shown in the top bar, the big home header and the browser tab title.
+title: Ana-Maria Ciobanu
+nav_name: Ana-Maria Ciobanu                 # the small name in the top bar
+header_name: Hi, I'm Ana! # the big name in the home header
+
+# Your email address. Shown on the Contact page (the big email button).
+# The email icon in the top bar uses the "mailto:" link in footer_links below.
+email: anamciobanu.dev@gmail.com
+
+# The line under your name in the home header.
+skills: 'I am a game programmer currently studying at <a href="https://www.buas.nl/en" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline">Breda University of Applied Sciences</a>. I enjoy developing gameplay systems and tools, with a focus on procedural generation and AI.'
+
+# For search engines and link previews (not visible on the page).
+description: "Hi, I'm Ana! I am gameplay programmer currently studying and Breda University of Applied Sciences."
+keywords: "portfolio, game programmer"
+meta_author: Ana Maria Ciobanu
+
+
+# ---------------------------------------------------------------------
+# 2. WHERE THE SITE LIVES  (affects every link, image and the stylesheet address)
+# Leave both empty while working on your own computer.
+#   Custom domain, or username.github.io:   url: "https://yourname.com"      baseurl: ""
+#   GitHub project page (user.github.io/repo):  url: "https://user.github.io"  baseurl: "/repo"
+# ---------------------------------------------------------------------
 url: ""
 baseurl: ""
 
-# Search engine verification (optional)
+# Optional: codes that prove you own the site to Google / Bing. Leave empty if unused.
 google_verify:
 bing_verify:
 
-# ---------- Colors (hex codes without the #) ----------
-color:
-  primary: 18bc9c
-  primary-rgb: "24,188,156"   # must match "primary" in RGB (18bc9c = 24,188,156)
-  secondary: 2c3e50
-  secondary-dark: 233140
 
-# ---------- Footer ----------
-# Icon-only links shown in the big footer. Entries with an empty url are hidden.
-# "icon" is any Font Awesome class: "fa-brands fa-github", "fa-solid fa-envelope", ...
+# ---------------------------------------------------------------------
+# 3. COLORS  (hex codes WITHOUT the #)
+# These are used in _includes/css/main.css, so changing one changes the whole site.
+# ---------------------------------------------------------------------
+color:
+  primary: C3614B            # MAIN COLOR (brick). Home header and page banners, links, buttons, article thumbnails.
+  primary-dark: A84B38       # Button color while hovered / pressed.
+  secondary: 764137          # DARK COLOR (brown). Top bar, side menu, footer, text, card shadows.
+  secondary-rgb: "118,65,55" # The SAME color as "secondary" written as red,green,blue.
+                             #   Used for card shadows and thin lines. Must match "secondary"!
+  secondary-dark: 63352C     # Slightly darker brown. Hover color of the side-menu entries.
+  accent: EBBEAD             # LIGHT BRICK. Text on dark areas when hovered / active (menu, name, footer links).
+  background: FAF5F3         # PAGE BACKGROUND. Behind the cards, in every section of every page.
+  card: FFF7ED               # Background of the cards themselves (warm cream).
+
+# ---------------------------------------------------------------------
+# 4. LINK BUTTONS  (email, GitHub, itch.io, LinkedIn)
+# This ONE list is used in two places: the round buttons in the top bar, and the
+# buttons on the Contact page. To add a link, copy an entry. To hide one, empty its url.
+#   title : text on the Contact page button
+#   icon  : any Font Awesome icon class, e.g. "fa-brands fa-github"
+#   url   : where it goes. Email links start with "mailto:"
+# ---------------------------------------------------------------------
 footer_links:
   - title: Email
     icon: fa-solid fa-envelope
-    url: anamciobanu.dev@gmail.com
+    url: https://mail.google.com/mail/?view=cm&fs=1&to=anamciobanu.dev@gmail.com
   - title: GitHub
     icon: fa-brands fa-github
     url: https://github.com/AnaMCbn
+  - title: itch.io
+    icon: fa-brands fa-itch-io
+    url: https://orbete.itch.io
   - title: LinkedIn
     icon: fa-brands fa-linkedin
     url: https://www.linkedin.com
 
-# Line at the very bottom of every page
+
+# ---------------------------------------------------------------------
+# 5. FOOTER CREDIT  (the line at the bottom of every page)
+# ---------------------------------------------------------------------
 theme_credit:
   name: Freelancer Jekyll theme
   url: https://github.com/jeromelachaud/freelancer-theme
 
-# ---------- Build settings ----------
+
+# ---------------------------------------------------------------------
+# 6. HOW THE SITE IS BUILT  (you rarely need to touch this)
+# ---------------------------------------------------------------------
 markdown: kramdown
 
-# Articles are the regular posts in _posts/
+# Articles are the files in _posts/. This makes their addresses look like /articles/my-title/
 permalink: /articles/:title/
 
-# Projects live in _projects/ and get their own pages
+# Projects are the files in _projects/. Each one becomes its own page: /projects/name/
 collections:
   projects:
     output: true
     permalink: /projects/:name/
 
-# Files Jekyll should not copy into the built site
+# Files that are NOT copied into the finished website
 exclude:
   - Gemfile
   - Gemfile.lock
   - README.md
-  - LICENCE
   - node_modules
   - vendor

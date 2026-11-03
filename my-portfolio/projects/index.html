@@ -2,17 +2,17 @@
 layout: default
 title: Projects
 ---
+{% comment %} THE PROJECTS PAGE (address: /projects/): a banner, then a card for every project. {% endcomment %}
 <header class="page-header">
   <div class="container">
     <div class="intro-text">
       <h1 class="name">Projects</h1>
-      <hr class="star-light" />
     </div>
   </div>
 </header>
 
-<section id="portfolio">
-  <div class="container portfolio-flex-grid">
+<section class="home-section list-page">
+  <div class="container">
     {% include portfolio_grid.html %}
   </div>
 </section>

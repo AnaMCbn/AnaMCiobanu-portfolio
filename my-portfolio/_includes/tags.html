@@ -1,0 +1,16 @@
+{% comment %}
+  Shows the tags of a project or article.
+  Usage: {% include tags.html tags=item.tags %}
+  Look and wording of each tag: _data/tags.yml
+{% endcomment %}
+{% assign tag_count = include.tags | size %}
+{% if tag_count > 0 %}
+<ul class="tag-list">
+  {% for tag in include.tags %}
+  {% assign tag_info = site.data.tags[tag] %}
+  <li>
+    <a class="tag" href="{{ '/tags/#' | append: tag | relative_url }}"{% if tag_info.color %} style="--tag-color: #{{ tag_info.color }}"{% endif %}>{{ tag_info.label | default: tag }}</a>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}

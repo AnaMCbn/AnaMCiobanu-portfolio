@@ -1,21 +1,100 @@
 /*!
- * Start Bootstrap - Freelancer Bootstrap Theme (http://startbootstrap.com)
+ * Based on Start Bootstrap - Freelancer Bootstrap Theme (http://startbootstrap.com)
  * Code licensed under the Apache License v2.0.
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+/* =====================================================================
+   main.css  -  ALL of this site's own styling
+
+   HOW IT IS BUILT
+   style.css (in the site root) pastes two files together:
+     1. _includes/css/bootstrap.min.css  - Bootstrap/Flatly: the grid, buttons, base look
+     2. this file                        - everything specific to this site
+   This file comes second, so its rules win over Bootstrap's.
+
+   COLORS
+   Colors are NOT typed in here. The bits that look like "site.color.primary" inside
+   double curly braces are filled in from the "color:" list in _config.yml when the
+   site is built. To change a color, change it in _config.yml (then restart jekyll serve).
+
+   CONTENTS
+     1. Settings (variables you can change)
+     2. Page basics (body, text, links, headings)
+     3. Top bar
+     4. Slide-out menu
+     5. Home header (picture + name)
+     6. Page banners (Projects / Articles / Contact / single pages)
+     7. Sections, divider lines, text pages
+     8. Cards (projects + articles)
+     9. Tags
+    10. Buttons
+    11. Contact page
+    12. Footer
+    13. Scroll-to-top button
+   ===================================================================== */
+
+
+/* =====================================================================
+   1. SETTINGS - the values most likely to be changed
+   ===================================================================== */
+:root {
+    /* The font used everywhere.
+       Also change the Google Fonts <link> in _includes/head.html if you switch fonts. */
+    --font-main: "Schibsted Grotesk","Helvetica Neue",Helvetica,Arial,sans-serif;
+
+    /* Color of the thin divider lines between sections and inside cards
+       (made from the "secondary" color, so it follows _config.yml). */
+    --line: rgba({{ site.color.secondary-rgb }},.16);
+
+    /* Overall page size. 1 = normal, 0.85 = a bit zoomed out, 0.75 = more zoomed out.
+       Affects EVERYTHING on the page. */
+    --site-zoom: 1;
+
+    /* FOOTER MODE - change these two lines together:
+         Normal footer at the end of the page (default):  static  and  0px
+         Bar that is always visible, like the top bar:    fixed   and  58px
+       (the second value keeps the bar from covering the end of the page) */
+    --footer-position: static;
+    --footer-space: 0px;
+}
+
+@media (min-width: 992px) {
+    :root {
+        --site-zoom: 0.85;
+    }
+}
+
+/* =====================================================================
+   2. PAGE BASICS
+   ===================================================================== */
+html {
+    scroll-behavior: smooth;                 /* smooth scrolling for links like #page-top */
+}
+
+/* The page is a column at least as tall as the screen.
+   That is what lets the footer sit at the very bottom even on short pages (see 12). */
 body {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh / var(--site-zoom));      /* divided by the zoom so it still fills the screen */
+    min-height: calc(100dvh / var(--site-zoom));
+    padding-bottom: var(--footer-space);             /* only used when the footer is a fixed bar */
     overflow-x: hidden;
+    font-family: var(--font-main);
+    background-color: #{{ site.color.background }};  /* page background (color: background) */
+    zoom: var(--site-zoom);
+}
+
+body > * {
+    flex-shrink: 0;
 }
 
 p {
-    font-size: 20px;
+    font-size: 20px;                         /* size of body text */
 }
 
-p.small {
-    font-size: 16px;
-}
-
+/* All links use the main (primary) color */
 a,
 a:hover,
 a:focus,
@@ -32,378 +111,17 @@ h4,
 h5,
 h6 {
     text-transform: uppercase;
-    font-family: "Anek Bangla","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: var(--font-main);
     font-weight: 700;
-}
-
-hr.star-light,
-hr.star-primary {
-    margin: 25px auto 30px;
-    padding: 0;
-    max-width: 250px;
-    border: 0;
-    border-top: solid 5px;
-    text-align: center;
-    overflow: visible;
-}
-
-hr.star-light:after,
-hr.star-primary:after {
-    content: "\f005";
-    display: inline-block;
-    position: relative;
-    top: -.8em;
-    padding: 0 .25em;
-    font-family: FontAwesome;
-    font-size: 2em;
-}
-
-hr.star-light {
-    border-color: #fff;
-}
-
-hr.star-light:after {
-    color: #fff;
-    background-color: #{{ site.color.primary }};
-}
-
-hr.star-primary {
-    border-color: #{{ site.color.secondary }};
-}
-
-hr.star-primary:after {
-    color: #{{ site.color.secondary }};
-    background-color: #fff;
 }
 
 .img-centered {
     margin: 0 auto;
 }
 
-header {
-    text-align: center;
-    color: #fff;
-    background: #{{ site.color.primary }};
-}
-
-header .container {
-    padding-top: 100px;
-    padding-bottom: 50px;
-}
-
-/* Picture + text wrapper. Phones: picture on top, text below */
-header .header-flex {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-}
-
-header img {
-    display: block;
-    margin: 0;
-    flex-shrink: 0;
-}
-
-header .intro-text .name {
-    display: block;
-    text-transform: uppercase;
-    font-family: "Anek Bangla","Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 2em;
-    font-weight: 700;
-}
-
-header .intro-text .skills {
-    font-size: 1.25em;
-    font-weight: 300;
-}
-
-@media(min-width:500px) {
-    header .container {
-        padding-top: 110px;      /* must be larger than the top bar's height */
-        padding-bottom: 50px;
-    }
-
-    /* Wider screens: picture left, text right */
-    header .header-flex {
-        flex-direction: row;
-        gap: 50px;               /* space between picture and text */
-    }
-
-    header .intro-text {
-        text-align: left;
-    }
-
-    header .intro-text .name {
-        font-size: 2.75em;
-    }
-
-    header .intro-text .skills {
-        font-size: 1.25em;
-    }
-}
-
-@media(min-width:768px) {
-    .navbar-fixed-top {
-        padding: 25px 0;
-        -webkit-transition: padding .3s;
-        -moz-transition: padding .3s;
-        transition: padding .3s;
-    }
-
-    .navbar-fixed-top .navbar-brand {
-        font-size: 2em;
-        -webkit-transition: all .3s;
-        -moz-transition: all .3s;
-        transition: all .3s;
-    }
-
-    .navbar-fixed-top.navbar-shrink {
-        padding: 10px 0;
-    }
-
-    .navbar-fixed-top.navbar-shrink .navbar-brand {
-        font-size: 1.5em;
-    }
-}
-
-.navbar {
-    text-transform: uppercase;
-    font-family: "Anek Bangla","Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-weight: 700;
-}
-
-.navbar a:focus {
-    outline: 0;
-}
-
-.navbar .navbar-nav {
-    letter-spacing: 1px;
-}
-
-.navbar .navbar-nav li a:focus {
-    outline: 0;
-}
-
-.navbar-default,
-.navbar-inverse {
-    border: 0;
-}
-
-section {
-    padding: 100px 0;
-}
-
-section h2 {
-    margin: 0;
-    font-size: 3em;
-}
-
-section.success {
-    color: #fff;
-    background: #{{ site.color.primary }};
-}
-
-@media(max-width:767px) {
-    section {
-        padding: 75px 0;
-    }
-
-    section.first {
-        padding-top: 75px;
-    }
-}
-
-#portfolio .portfolio-item {
-    right: 0;
-    margin: 0 0 15px;
-}
-
-#portfolio .portfolio-item .portfolio-link {
-    display: block;
-    position: relative;
-    margin: 0 auto;
-    max-width: 400px;
-}
-
-#portfolio .portfolio-item .portfolio-link .caption {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    background: rgba({{ site.color.primary-rgb }},.9);
-    -webkit-transition: all ease .5s;
-    -moz-transition: all ease .5s;
-    transition: all ease .5s;
-}
-
-#portfolio .portfolio-item .portfolio-link .caption:hover {
-    opacity: 1;
-}
-
-#portfolio .portfolio-item .portfolio-link .caption .caption-content {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    height: 20px;
-    margin-top: -12px;
-    text-align: center;
-    font-size: 20px;
-    color: #fff;
-}
-
-#portfolio .portfolio-item .portfolio-link .caption .caption-content i {
-    margin-top: -12px;
-}
-
-#portfolio .portfolio-item .portfolio-link .caption .caption-content h3,
-#portfolio .portfolio-item .portfolio-link .caption .caption-content h4 {
-    margin: 0;
-}
-
-#portfolio * {
-    z-index: 2;
-}
-
-@media(min-width:767px) {
-    #portfolio .portfolio-item {
-        margin: 0 0 30px;
-    }
-}
-
-/* Flexbox Portfolio Grid */
-@media (min-width: 640px) {
-    .portfolio-flex-grid .portfolio-flex-row {
-      display: flex;
-      flex-flow: row wrap;
-      align-items: stretch;
-      justify-content: space-between;
-    }
-    .portfolio-flex-grid .portfolio-flex-row .portfolio-flex-item {
-      flex: 1 0 49%;
-      max-width: 49%;
-    }
-  }
-  @media (min-width: 960px) {
-    .portfolio-flex-grid .portfolio-flex-row .portfolio-flex-item {
-      flex: 1 0 32%;
-      max-width: 32%;
-    }
-  }
-  /* A large grid might need four columns on widescreen layouts */
-  /* @media (min-width: 1380px) {
-    .portfolio-flex-grid .portfolio-flex-row .portfolio-flex-item {
-      flex: 1 0 23.5%;
-      max-width: 23.5%;
-    }
-  } */
-
-.btn-outline {
-    margin-top: 15px;
-    border: solid 2px #fff;
-    font-size: 20px;
-    color: #fff;
-    background: 0 0;
-    transition: all .3s ease-in-out;
-}
-
-.btn-outline:hover,
-.btn-outline:focus,
-.btn-outline:active,
-.btn-outline.active {
-    border: solid 2px #fff;
-    color: #{{ site.color.primary }};
-    background: #fff;
-}
-
-.floating-label-form-group {
-    position: relative;
-    margin-bottom: 0;
-    padding-bottom: .5em;
-    border-bottom: 1px solid #eee;
-}
-
-.floating-label-form-group input,
-.floating-label-form-group textarea {
-    z-index: 1;
-    position: relative;
-    padding-right: 0;
-    padding-left: 0;
-    border: 0;
-    border-radius: 0;
-    font-size: 1.5em;
-    background: 0 0;
-    box-shadow: none!important;
-    resize: none;
-}
-
-.floating-label-form-group label {
-    display: block;
-    z-index: 0;
-    position: relative;
-    top: 2em;
-    margin: 0;
-    font-size: .85em;
-    line-height: 1.764705882em;
-    vertical-align: middle;
-    vertical-align: baseline;
-    opacity: 0;
-    -webkit-transition: top .3s ease,opacity .3s ease;
-    -moz-transition: top .3s ease,opacity .3s ease;
-    -ms-transition: top .3s ease,opacity .3s ease;
-    transition: top .3s ease,opacity .3s ease;
-}
-
-.floating-label-form-group::not(:first-child) {
-    padding-left: 14px;
-    border-left: 1px solid #eee;
-}
-
-.floating-label-form-group-with-value label {
-    top: 0;
-    opacity: 1;
-}
-
-.floating-label-form-group-with-focus label {
-    color: #{{ site.color.primary }};
-}
-
-form .row:first-child .floating-label-form-group {
-    border-top: 1px solid #eee;
-}
-
-footer {
-    color: #fff;
-}
-
-footer h3 {
-    margin-bottom: 30px;
-}
-
-footer .footer-above {
-    padding-top: 50px;
-    background-color: #{{ site.color.secondary }};
-}
-
-footer .footer-col {
-    margin-bottom: 50px;
-}
-
-footer .footer-below {
-    padding: 25px 0;
-    background-color: #{{ site.color.secondary-dark }};
-}
-
-.btn-social {
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    border: 2px solid #fff;
-    border-radius: 100%;
-    text-align: center;
-    font-size: 20px;
-    line-height: 45px;
+/* Anything with the "hidden" attribute is really hidden (the Tags page filter relies on this) */
+[hidden] {
+    display: none !important;
 }
 
 .btn:focus,
@@ -412,180 +130,45 @@ footer .footer-below {
     outline: 0;
 }
 
-.scroll-top {
-    z-index: 1049;
-    position: fixed;
-    right: 2%;
-    bottom: 2%;
-    width: 50px;
-    height: 50px;
-}
-
-.scroll-top .btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 100%;
-    font-size: 20px;
-    line-height: 28px;
-}
-
-.scroll-top .btn:focus {
-    outline: 0;
-}
-
-.portfolio-modal .modal-content {
-    padding: 100px 0;
-    min-height: 100%;
-    border: 0;
-    border-radius: 0;
-    text-align: center;
-    background-clip: border-box;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-}
-
-.portfolio-modal .modal-content h2 {
-    margin: 0;
-    font-size: 3em;
-}
-
-.portfolio-modal .modal-content img {
-    margin-bottom: 30px;
-}
-
-.portfolio-modal .modal-content .item-details {
-    margin: 30px 0;
-}
-
-.portfolio-modal .close-modal {
-    position: absolute;
-    top: 25px;
-    right: 25px;
-    width: 75px;
-    height: 75px;
-    background-color: transparent;
-    cursor: pointer;
-}
-
-.portfolio-modal .close-modal:hover {
-    opacity: .3;
-}
-
-.portfolio-modal .close-modal .lr {
-    z-index: 1051;
-    width: 1px;
-    height: 75px;
-    margin-left: 35px;
-    background-color: #{{ site.color.secondary }};
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
-
-.portfolio-modal .close-modal .lr .rl {
-    z-index: 1052;
-    width: 1px;
-    height: 75px;
-    background-color: #{{ site.color.secondary }};
-    -webkit-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    transform: rotate(90deg);
-}
-
-.navbar-nav>.active>a {
-    background-color: #{{ site.color.secondary-dark }} !important;
-}
-
-/* Fix modal mouse wheel issues */
-/* https://github.com/twbs/bootstrap/issues/16297 */
-.modal.fade.in {
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-}
-
-
-/* ---------- Additions for multi-page layout ---------- */
-html {
-    scroll-behavior: smooth;
-}
-
+/* Jumping to an anchor leaves room for the fixed top bar */
 section[id] {
     scroll-margin-top: 70px;
 }
 
-/* Smaller banner used on Projects / Articles / single pages */
-header.page-header .container {
-    padding-top: 110px;
-    padding-bottom: 40px;
-}
 
-header.page-header .intro-text .name {
-    margin: 0;
-    font-size: 2.25em;
-}
-
-@media(min-width:768px) {
-    header.page-header .container {
-        padding-top: 150px;
-        padding-bottom: 60px;
-    }
-
-    header.page-header .intro-text .name {
-        font-size: 3.5em;
-    }
-}
-
-/* Title under each project thumbnail */
-.portfolio-title {
-    margin: 10px 0 25px;
-    font-family:"Anek Bangla","Helvetica Neue",Helvetica,Arial,sans-serif;
+/* =====================================================================
+   3. TOP BAR  (markup: _includes/nav.html)
+   Menu button on the left; your name + the link buttons on the right.
+   ===================================================================== */
+.navbar {
+    text-transform: uppercase;
+    font-family: var(--font-main);
     font-weight: 700;
 }
 
-/* Text pages (single project, single article, article list) */
-section.content-page {
-    padding: 60px 0 80px;
+.navbar-default {
+    border: 0;
 }
 
-section.content-page img {
-    margin-bottom: 25px;
+/* Bar height on tablets/desktops: the padding above and below the content */
+@media (min-width: 768px) {
+    .navbar-fixed-top {
+        padding: 10px 0;
+    }
+
+    .navbar-fixed-top .navbar-brand {
+        font-size: 1.5em;                    /* size of your name in the bar */
+        transition: color .3s;
+    }
 }
 
-section.content-page .item-details {
-    margin: 30px 0;
-}
-
-.article-preview {
-    margin-bottom: 40px;
-}
-
-.article-preview h3 {
-    margin-bottom: 5px;
-}
-
-.article-date {
-    font-size: 15px;
-    color: #7b8a8b;
-}
-
-
-/* ---------- Overall size: change this one number ---------- */
-:root {
-    --site-zoom: 1;
-}
-
-body {
-    zoom: var(--site-zoom);
-}
-
-/* ---------- Top bar: menu button left, name right ---------- */
+/* The row inside the bar. The Bootstrap "container" is not used, so the bar spans the full width. */
 .nav-bar-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* Full-width bar: this padding is the gap between the screen edge and the
-       menu button (left) / your name (right). Smaller number = closer to the edge. */
-    padding: 0 25px;
+    padding: 0 25px;                         /* gap between the screen edge and the menu button / buttons */
+    min-height: 62px;                        /* keeps the menu button vertically centered, never touching the edge */
 }
 
 /* Bootstrap's clearfix pseudo-elements would act as extra flex items */
@@ -594,6 +177,7 @@ body {
     display: none;
 }
 
+/* Your name */
 .nav-bar-inner .navbar-brand {
     float: none;
     margin: 0;
@@ -601,9 +185,22 @@ body {
     text-align: right;
 }
 
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #{{ site.color.accent }};
+}
+
+/* Your name + the round link buttons, side by side */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;                               /* space between the name and the buttons */
+}
+
+/* The three-bar menu button */
 .menu-toggle {
     margin: 0;
-    padding: 13px 15px;
+    padding: 13px 15px;                      /* button size around the bars */
     background: transparent;
     border: 1px solid #1a242f;
     border-radius: 4px;
@@ -614,23 +211,95 @@ body {
     outline: 0;
 }
 
+.menu-toggle:hover {
+    background-color: rgba(255, 255, 255, .1);
+}
+
 .menu-toggle .icon-bar {
     display: block;
-    width: 32px;
-    height: 3px;
+    width: 32px;                             /* length of each bar */
+    height: 3px;                             /* thickness of each bar */
     border-radius: 2px;
     background-color: #fff;
 }
 
 .menu-toggle .icon-bar + .icon-bar {
-    margin-top: 6px;
+    margin-top: 6px;                         /* gap between the bars */
 }
 
-.menu-toggle:hover {
-    background-color: rgba(255, 255, 255, .1);
+/* The round link buttons (email, GitHub, itch.io, LinkedIn). Which ones exist: footer_links in _config.yml */
+.nav-social {
+    display: flex;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
-/* ---------- Slide-out menu ---------- */
+.nav-social .nav-social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;                             /* button size */
+    height: 40px;
+    border: 1px solid rgba(255,255,255,.4);
+    border-radius: 50%;
+    font-size: 17px;                         /* icon size */
+    color: #fff;
+    text-decoration: none;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.nav-social .nav-social-btn:hover,
+.nav-social .nav-social-btn:focus {
+    color: #{{ site.color.secondary }};
+    background: #{{ site.color.accent }};
+    border-color: #{{ site.color.accent }};
+}
+
+/* Phones: everything in the bar shrinks so name + 4 buttons + menu button all fit */
+@media (max-width: 575px) {
+    .nav-bar-inner {
+        padding: 0 12px;
+    }
+
+    .nav-right {
+        gap: 8px;
+    }
+
+    .nav-right .navbar-brand {
+        height: auto;
+        padding: 0;
+        font-size: 15px !important;
+    }
+
+    .nav-social {
+        gap: 5px;
+    }
+
+    .nav-social .nav-social-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 13px;
+    }
+
+    .menu-toggle {
+        padding: 10px 11px;
+    }
+
+    .menu-toggle .icon-bar {
+        width: 22px;
+    }
+}
+
+
+/* =====================================================================
+   4. SLIDE-OUT MENU  (markup: _includes/nav.html, behavior: js/site.js)
+   The panel that slides in from the left. js/site.js adds the class
+   "menu-open" to the page, and the rules below react to that class.
+   ===================================================================== */
+
+/* Dark layer over the page while the menu is open (clicking it closes the menu) */
 .menu-overlay {
     position: fixed;
     top: 0;
@@ -644,22 +313,24 @@ body {
     transition: opacity .3s ease, visibility .3s;
 }
 
+/* The panel itself */
 .side-menu {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     z-index: 1050;
-    width: 280px;
+    width: 280px;                            /* panel width */
     max-width: 85%;
     padding: 70px 0 30px;
     overflow-y: auto;
     background: #{{ site.color.secondary }};
-    transform: translateX(-100%);
+    transform: translateX(-100%);            /* parked off-screen to the left */
     visibility: hidden;
     transition: transform .3s ease, visibility .3s;
 }
 
+/* Menu open: slide the panel in, show the overlay, stop the page behind from scrolling */
 body.menu-open {
     overflow: hidden;
 }
@@ -691,6 +362,7 @@ body.menu-open .side-menu {
     outline: 0;
 }
 
+/* The menu entries: About, Projects, Articles, Contact */
 .side-menu-list {
     margin: 0;
     padding: 0;
@@ -703,7 +375,7 @@ body.menu-open .side-menu {
     color: #fff;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-family: "Anek Bangla","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: var(--font-main);
     font-size: 18px;
     font-weight: 700;
     text-decoration: none;
@@ -713,36 +385,202 @@ body.menu-open .side-menu {
 .side-menu-list a:hover,
 .side-menu-list a:focus {
     background: #{{ site.color.secondary-dark }};
-    color: #{{ site.color.primary }};
+    color: #{{ site.color.accent }};
     outline: 0;
 }
 
+/* The entry for the page you are on */
 .side-menu-list .active a {
-    color: #{{ site.color.primary }};
-    border-left-color: #{{ site.color.primary }};
+    color: #{{ site.color.accent }};
+    border-left-color: #{{ site.color.accent }};
 }
 
-/* ---------- Footer (links only) ---------- */
-footer .footer-above {
-    padding: 50px 0 35px;
+
+/* =====================================================================
+   5. HOME HEADER  (markup: _includes/header.html)
+   The colored area at the top of the home page: picture on the left,
+   name + tagline centered in the middle.
+   ===================================================================== */
+header {
+    --pic: 220px;                            /* size of the picture (also the empty space kept on the right) */
+    text-align: center;
+    color: #fff;
+    background: #{{ site.color.primary }};   /* header color (color: primary) */
 }
 
-.footer-links {
+/* Same width as the sections below, so the picture sits above the Projects / Articles titles */
+header .container {
+    padding-top: 105px;                      /* must stay larger than the top bar's height */
+    padding-bottom: 35px;
+}
+
+/* Phones: picture on top, text below */
+header .header-flex {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: center;
+    justify-items: center;
+}
+
+header img {
+    display: block;
+    width: var(--pic);
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+}
+
+header .intro-text {
+    text-align: center;
+}
+
+header .intro-text .name {
+    display: block;
+    text-transform: none;
+    font-family: var(--font-main);
+    font-size: 2em;                          /* your name (phones) */
+    font-weight: 700;
+}
+
+header .intro-text .skills {
+    display: block;
+    font-size: 1.25em;                       /* the tagline under your name */
+    font-weight: 400;
+}
+
+/* Tablets: picture on the left, text centered in the middle of the header.
+   The empty third column is as wide as the picture, which keeps the text exactly centered. */
+@media (min-width: 640px) {
+    header {
+        --pic: 160px;
+    }
+
+    header .header-flex {
+        grid-template-columns: var(--pic) 1fr var(--pic);
+        gap: 30px;
+        justify-items: stretch;
+    }
+
+    header .header-picture {
+        grid-column: 1;
+        justify-self: start;
+    }
+
+        header .intro-text {
+        grid-column: 2;
+    }
+
+    header:not(.page-header) .intro-text {
+        position: relative;
+        left: 60px;
+    }
+
+    header .intro-text .name {
+        font-size: 2.6em;
+    }
+}
+
+/* Desktops: bigger picture and name */
+@media (min-width: 992px) {
+    header {
+        --pic: 220px;
+    }
+
+    header .intro-text .name {
+        font-size: 3.25em;
+    }
+}
+
+
+/* =====================================================================
+   6. PAGE BANNERS  (the colored title strip on Projects, Articles,
+   Contact, Tags and on every single project / article page)
+   ===================================================================== */
+header.page-header .container {
+    padding-top: 110px;
+    padding-bottom: 40px;
+}
+
+header.page-header .intro-text .name {
+    margin: 0;
+    font-size: 2.25em;                       /* banner title */
+}
+
+@media (min-width: 768px) {
+    header.page-header .container {
+        padding-top: 150px;
+        padding-bottom: 60px;
+    }
+
+    header.page-header .intro-text .name {
+        font-size: 3.5em;
+    }
+}
+
+
+/* =====================================================================
+   7. SECTIONS, DIVIDER LINES, TEXT PAGES
+   ===================================================================== */
+
+/* A band of the page: Projects and Articles on the home page, and the body of the
+   Projects / Articles / Contact / Tags pages. All of them use the same background. */
+.home-section {
+    padding: 70px 0 80px;
+    background: #{{ site.color.background }};
+}
+
+/* thin line between neighbouring sections */
+.home-section + .home-section {
+    border-top: 1px solid var(--line);
+}
+
+/* Pages that have a banner on top: a little less space above the cards */
+.home-section.list-page {
+    padding: 60px 0 90px;
+}
+
+/* Section title row ("Projects", "Articles"): aligned LEFT */
+.section-head {
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.section-head h2 {
+    margin: 0;
+    font-size: 2.4em;                        /* section title size */
+}
+
+/* The divider line under each section title (markup: hr with class "section-line") */
+hr.section-line {
+    height: 0;
+    margin: 14px 0 0;
+    border: 0;
+    border-top: 1px solid rgba({{ site.color.secondary-rgb }},.3);
+}
+
+/* The row under the cards that holds the "Read more" button, with a subtle line above it */
+.section-more {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+    text-align: left;
+}
+
+/* Pages made of text: a single project or article (layouts: project.html, post.html) */
+section.content-page {
+    padding: 60px 0 80px;
+}
+
+section.content-page img {
     margin-bottom: 25px;
 }
 
-.footer-credit {
-    margin: 0;
-    font-size: 14px;
-    opacity: .75;
+section.content-page .item-details {
+    margin: 30px 0;                          /* the Client / Date / Service line on a project page */
 }
 
-.footer-credit a {
-    color: #fff;
-    text-decoration: underline;
-}
-
-/* Headings and lists inside project / article text */
+/* Headings and lists written in Markdown inside a project or article */
 section.content-page h2 {
     margin: 40px 0 15px;
     font-size: 1.9em;
@@ -759,17 +597,352 @@ section.content-page ol {
     font-size: 20px;
 }
 
-/* Hide the scroll-to-top button while the menu is open */
-body.menu-open .scroll-top {
-    display: none;
+
+/* =====================================================================
+   8. CARDS  (markup: _includes/card.html)
+   One card per project or article, used on the home page, the Projects
+   and Articles pages, and the Tags page.
+   ===================================================================== */
+
+/* The grid of cards: 1 column on phones, 2 on tablets, 3 on desktops */
+.card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;                               /* space between cards */
 }
 
-@media (min-width: 768px) {
-    .navbar-fixed-top {
-        padding: 10px 0;
+@media (min-width: 640px) {
+    .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 960px) {
+    .card-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #{{ site.color.card }};      /* card background (color: card) */
+    box-shadow: 0 2px 8px rgba({{ site.color.secondary-rgb }},.12);    /* faint shadow at rest */
+    transition: box-shadow .25s ease, transform .25s ease;
+}
+
+/* Hover: the card lifts and gets a stronger, dark shadow */
+.card:hover,
+.card:focus-within {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 32px rgba({{ site.color.secondary-rgb }},.38);
+}
+
+/* The picture area. Its shape matches the project pictures (900 x 650). */
+.card-media {
+    display: block;
+    aspect-ratio: 900 / 650;
+    overflow: hidden;
+    background: #{{ site.color.background }};     /* only visible behind transparent pictures */
+}
+
+/* Article cards: ONE background color behind every article picture.
+   The pictures in img/articles/ are transparent icons, so this color shows through.
+   A fully opaque photo keeps its own colors. Change it here to restyle all article thumbnails. */
+.card-articles .card-media {
+    background: #{{ site.color.primary }};
+}
+
+.card-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    object-fit: cover;
+}
+
+/* Shown instead of a picture when an item has no "img:" line */
+.card-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 48px;
+    color: rgba({{ site.color.secondary-rgb }},.35);
+}
+
+.card-body {
+    flex: 1;
+    padding: 14px 20px 12px;
+}
+
+/* Small date under the picture */
+.card-date {
+    display: block;
+    font-size: 13px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: rgba({{ site.color.secondary-rgb }},.65);
+}
+
+.card-title {
+    margin: 6px 0 8px;
+    font-size: 20px;
+    text-transform: none;
+}
+
+.card-title a,
+.card-title a:hover,
+.card-title a:focus {
+    color: #{{ site.color.secondary }};
+    text-decoration: none;
+}
+
+.card:hover .card-title a {
+    color: #{{ site.color.primary }};        /* title turns to the main color on hover */
+}
+
+/* The information text (description: in the project / article file) - at most 4 lines */
+.card-info {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* THE WHOLE CARD IS ONE BIG LINK: the title's link is stretched over the whole card,
+   so a click anywhere on the card opens it. */
+.card-title a::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+}
+
+
+/* =====================================================================
+   9. TAGS  (markup: _includes/tags.html, look of each tag: _data/tags.yml,
+   behavior of the Tags page: js/tags.js)
+   ===================================================================== */
+
+/* The row of tags at the bottom of a card */
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 12px 20px 18px;
+    list-style: none;
+    border-top: 1px solid var(--line);       /* subtle line above the tags */
+}
+
+/* Tags sit above the card's big link, so they stay separately clickable;
+   empty space in the tag row still opens the card. */
+.card .tag-list {
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.card .tag-list .tag {
+    pointer-events: auto;
+}
+
+/* Tags on a single project / article page: no box, just the tags */
+.content-page .tag-list {
+    margin: 25px 0;
+    padding: 0;
+    border: 0;
+}
+
+/* One tag. Its color comes from _data/tags.yml (set per tag); this is the default. */
+.tag {
+    --tag-color: #{{ site.color.secondary }};
+    display: inline-block;
+    padding: 2px 11px;
+    border: 1px solid var(--tag-color);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--tag-color);
+    background: rgba(255,255,255,.5);
+    background: color-mix(in srgb, var(--tag-color) 12%, white);   /* soft tint of the tag color */
+    text-decoration: none;
+}
+
+a.tag:hover,
+a.tag:focus {
+    color: #fff;
+    background: var(--tag-color);
+    text-decoration: none;
+}
+
+/* Tags page: the row of filter chips at the top */
+.tag-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 45px;
+    padding: 0;
+    list-style: none;
+}
+
+.tag-filter .tag {
+    padding: 5px 16px;
+    font-size: 15px;
+}
+
+/* The chip of the tag currently shown (js/tags.js adds the class "active") */
+a.tag.active {
+    color: #fff;
+    background: var(--tag-color);
+}
+
+.tag-block {
+    margin-bottom: 60px;
+}
+
+#tag-empty {
+    text-align: center;
+}
+
+
+/* =====================================================================
+   10. BUTTONS
+   ===================================================================== */
+
+/* Main button ("Read more", contact buttons) */
+.btn-main,
+a.btn-main {
+    border: 1px solid #{{ site.color.primary }};
+    color: #fff;
+    background: #{{ site.color.primary }};
+    transition: background .2s ease, border-color .2s ease;
+}
+
+.btn-main:hover,
+.btn-main:focus,
+.btn-main:active,
+a.btn-main:hover {
+    border-color: #{{ site.color.primary-dark }};
+    color: #fff;
+    background: #{{ site.color.primary-dark }};     /* hover color (color: primary-dark) */
+}
+
+/* "All projects" / "All articles" back buttons on single pages */
+.btn-default {
+    border-color: #{{ site.color.secondary }};
+    color: #fff;
+    background-color: #{{ site.color.secondary }};
+}
+
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active {
+    border-color: #{{ site.color.primary }};
+    color: #fff;
+    background-color: #{{ site.color.primary }};
+}
+
+
+/* =====================================================================
+   11. CONTACT PAGE  (markup: _includes/contact.html)
+   The row of buttons; which ones appear: footer_links in _config.yml
+   ===================================================================== */
+.contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 25px;
+}
+
+
+/* =====================================================================
+   12. FOOTER  (markup: _includes/footer.html)
+   Just the credit text, centered. Normal footer by default: it appears at
+   the end of the page, and on short pages (like Contact) it still sits at the
+   very bottom of the screen. To make it an always-visible bar, see
+   "FOOTER MODE" in section 1.
+   ===================================================================== */
+.site-footer {
+    position: var(--footer-position);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;                           /* same level as the top bar */
+    margin-top: auto;                        /* pushes the footer down on short pages */
+    color: #fff;
+    background: #{{ site.color.secondary }}; /* footer color: same as the top bar (color: secondary) */
+}
+
+.footer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 58px;                        /* footer height */
+    padding: 10px 25px;
+    text-align: center;
+}
+
+.footer-credit {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+    opacity: .85;
+}
+
+.footer-credit a,
+.footer-credit a:hover,
+.footer-credit a:focus {
+    color: #{{ site.color.accent }};
+    text-decoration: underline;
+}
+
+@media (max-width: 767px) {
+    .footer-bar {
+        padding: 8px 12px;
     }
 
-    .navbar-fixed-top .navbar-brand {
-        font-size: 1.5em;
+    .footer-credit {
+        font-size: 12px;
     }
+}
+
+
+/* =====================================================================
+   13. SCROLL-TO-TOP BUTTON  (markup: end of _includes/footer.html)
+   The round arrow button, shown on phones and tablets only.
+   ===================================================================== */
+.scroll-top {
+    z-index: 1049;
+    position: fixed;
+    right: 14px;
+    bottom: calc(var(--footer-space) + 16px);    /* stays above the footer when it is a fixed bar */
+    width: 50px;
+    height: 50px;
+}
+
+.scroll-top .btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    font-size: 20px;
+    line-height: 28px;
+}
+
+/* Hidden while the slide-out menu is open */
+body.menu-open .scroll-top {
+    display: none;
 }

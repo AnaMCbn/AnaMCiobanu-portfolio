@@ -1,24 +1,17 @@
 {% comment %}
-  Project grid. Usage:
-    {% include portfolio_grid.html limit=3 %}   -> newest 3 projects
-    {% include portfolio_grid.html %}           -> all projects
+  A GRID OF PROJECT CARDS (newest first). Projects = the files in _projects/.
+    {% include portfolio_grid.html limit=3 %}   -> newest 3  (home page)
+    {% include portfolio_grid.html %}           -> all       (Projects page, Tags page)
+  Grid columns and spacing: main.css section 8 (.card-grid).
 {% endcomment %}
 {% assign grid_projects = site.projects | sort: 'date' | reverse %}
 {% if include.limit %}
   {% assign grid_projects = grid_projects | slice: 0, include.limit %}
 {% endif %}
-<div class="portfolio-flex-row">
+<div class="card-grid">
   {% for project in grid_projects %}
-  <div class="portfolio-flex-item portfolio-item">
-    <a href="{{ project.url | relative_url }}" class="portfolio-link">
-      <div class="caption">
-        <div class="caption-content">
-          <i class="fa fa-search-plus fa-3x"></i>
-        </div>
-      </div>
-      <img src="{{ '/img/portfolio/' | append: project.img | relative_url }}" class="img-responsive" alt="{{ project.alt | default: project.title }}">
-    </a>
-    <h4 class="portfolio-title text-center"><a href="{{ project.url | relative_url }}">{{ project.title }}</a></h4>
-  </div>
+  {% include card.html item=project dir="portfolio" %}
+  {% else %}
+  <p>No projects yet.</p>
   {% endfor %}
 </div>

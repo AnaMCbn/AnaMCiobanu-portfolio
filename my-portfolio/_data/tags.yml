@@ -1,0 +1,32 @@
+# ---------------------------------------------------------------
+# TAGS: how they look.
+#
+# 1. Use a tag on any project or article by listing it in its front matter:
+#       tags: [web, game]
+#    (lowercase, no spaces: use a dash, e.g. game-dev)
+#
+# 2. Optional: style it here. The name below must match the tag exactly.
+#       label  = the text shown on the tag (default: the tag name itself)
+#       color  = hex code in quotes, WITHOUT the # (default: the site's brown)
+#
+# A tag that is not listed here still works. It just uses the defaults.
+# ---------------------------------------------------------------
+web:
+  label: Web
+  color: "A85A48"
+
+game:
+  label: Game dev
+  color: "7E5B8A"
+
+design:
+  label: Design
+  color: "B38A4F"
+
+writing:
+  label: Writing
+  color: "3F7F78"
+
+tutorial:
+  label: Tutorial
+  color: "5C6BA8"

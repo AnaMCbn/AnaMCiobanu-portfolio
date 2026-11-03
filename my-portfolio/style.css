@@ -1,3 +1,10 @@
 ---
 layout: style
 ---
+{% comment %}
+  THE SITE'S STYLESHEET. This file only exists to be built into /style.css, which every page loads
+  (see _includes/head.html). Its real content is assembled by _layouts/style.css from:
+    _includes/css/bootstrap.min.css  +  _includes/css/main.css
+  Edit those two, not this file. All your own styling is in main.css.
+{% endcomment %}{% include css/bootstrap.min.css %}
+{% include css/main.css %}

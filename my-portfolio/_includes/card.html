@@ -1,0 +1,23 @@
+{% comment %}
+  One card (picture, date, title, information, tags). Used for projects AND articles.
+  The whole card is clickable (see ".card-title a::after" in main.css); tags stay separate links.
+  Usage: {% include card.html item=project dir="portfolio" %}
+         {% include card.html item=post dir="articles" %}
+  "dir" is the folder inside /img/ that holds the picture named in the item's "img:" field.
+{% endcomment %}
+{% assign item = include.item %}
+<article class="card card-{{ include.dir }}" data-tags="{{ item.tags | join: ' ' }}">
+  <a href="{{ item.url | relative_url }}" class="card-media" tabindex="-1" aria-hidden="true">
+    {% if item.img %}
+    <img src="{{ '/img/' | append: include.dir | append: '/' | append: item.img | relative_url }}" alt="{{ item.alt | default: item.title }}">
+    {% else %}
+    <span class="card-placeholder"><i class="fa-regular fa-image"></i></span>
+    {% endif %}
+  </a>
+  <div class="card-body">
+    <time class="card-date" datetime="{{ item.date | date_to_xmlschema }}">{{ item.date | date: "%b %-d, %Y" }}</time>
+    <h4 class="card-title"><a href="{{ item.url | relative_url }}">{{ item.title }}</a></h4>
+    <p class="card-info">{{ item.description | default: item.excerpt | strip_html | strip }}</p>
+  </div>
+  {% include tags.html tags=item.tags %}
+</article>

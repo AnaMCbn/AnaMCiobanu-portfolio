@@ -7,6 +7,7 @@ alt: Project 5 preview
 project-date: Month 2026
 client: Client name
 category: Web Development
+tags: [web]
 description: One or two sentences summarizing the project. This also shows in search results and link previews.
 ---
 Write the full project story here in Markdown: the goal, your role, the process, and the result.

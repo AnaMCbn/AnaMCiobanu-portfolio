@@ -1,6 +1,12 @@
 ---
 layout: default
 ---
+{% comment %}
+  THE HOME PAGE. Three parts, top to bottom. To reorder or remove one, edit these lines.
+    1. header.html            -> picture, name, tagline
+    2. projects_preview.html  -> newest 3 projects + "Read more"
+    3. articles_preview.html  -> newest 3 articles + "Read more"
+{% endcomment %}
 {% include header.html %}
 {% include projects_preview.html %}
-{% include about.html %}
+{% include articles_preview.html %}
