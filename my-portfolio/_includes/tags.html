@@ -1,16 +1,15 @@
 {% comment %}
-  Shows the tags of a project or article.
+  THE TAGS OF A PROJECT OR ARTICLE, shown as filled pills. They are only labels (no links).
   Usage: {% include tags.html tags=item.tags %}
-  Look and wording of each tag: _data/tags.yml
+  Used at the bottom of every card (card.html) and at the top of a project page (_layouts/project.html).
+  Label and color of each tag: _data/tags.yml.  Look of the pills: main.css section 9.
 {% endcomment %}
 {% assign tag_count = include.tags | size %}
 {% if tag_count > 0 %}
 <ul class="tag-list">
   {% for tag in include.tags %}
   {% assign tag_info = site.data.tags[tag] %}
-  <li>
-    <a class="tag" href="{{ '/tags/#' | append: tag | relative_url }}"{% if tag_info.color %} style="--tag-color: #{{ tag_info.color }}"{% endif %}>{{ tag_info.label | default: tag }}</a>
-  </li>
+  <li><span class="tag"{% if tag_info.color %} style="--tag-color: #{{ tag_info.color }}"{% endif %}>{{ tag_info.label | default: tag }}</span></li>
   {% endfor %}
 </ul>
 {% endif %}

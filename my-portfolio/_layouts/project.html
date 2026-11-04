@@ -5,7 +5,8 @@ layout: default
   LAYOUT OF ONE PROJECT PAGE (used by every file in _projects/ through "layout: project").
   Fields read from the project's front matter (the part between the --- lines):
     title, date, category, img (picture in img/portfolio/), alt, description,
-    client, project-date, tags.   The text below the --- lines is the body of the page.
+    client, duration, tags (shown at the TOP of the page, under the title).
+    The text below the --- lines is the body of the page.
 {% endcomment %}
 <header class="page-header">
   <div class="container">
@@ -13,7 +14,8 @@ layout: default
       <div class="col-lg-12">
         <div class="intro-text">
           <h1 class="name">{{ page.title }}</h1>
-          <span class="skills">{{ page.date | date: "%B %-d, %Y" }}{% if page.category %} &middot; {{ page.category }}{% endif %}</span>
+          <span class="skills">{{ page.date | date: "%B %-d, %Y" }}{% if page.duration %} &middot; {{ page.duration }}{% endif %}{% if page.category %} &middot; {{ page.category }}{% endif %}</span>
+          {% include tags.html tags=page.tags %}
         </div>
       </div>
     </div>
@@ -32,13 +34,6 @@ layout: default
 
         {{ content }}
 
-        <ul class="list-inline item-details">
-          {% if page.client %}<li>Client: <strong>{{ page.client }}</strong></li>{% endif %}
-          {% if page.project-date %}<li>Date: <strong>{{ page.project-date }}</strong></li>{% endif %}
-          {% if page.category %}<li>Service: <strong>{{ page.category }}</strong></li>{% endif %}
-        </ul>
-
-        {% include tags.html tags=page.tags %}
 
         <a href="{{ '/projects/' | relative_url }}" class="btn btn-default"><i class="fa fa-arrow-left"></i> All projects</a>
       </div>

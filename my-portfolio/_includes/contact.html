@@ -8,7 +8,7 @@
   {% if link.url and link.url != "" %}
   <a href="{{ link.url }}" class="btn btn-main btn-lg"{% unless link.url contains 'mailto:' %} target="_blank" rel="noopener"{% endunless %}>
     <i class="{{ link.icon }} fa-fw"></i>
-    {% if link.url contains 'mailto:' %}{{ site.email }}{% else %}{{ link.title }}{% endif %}
+    {% if link.title == 'Email' %}{{ site.email }}{% else %}{{ link.title }}{% endif %}
   </a>
   {% endif %}
   {% endfor %}

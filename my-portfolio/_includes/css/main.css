@@ -39,34 +39,65 @@
    1. SETTINGS - the values most likely to be changed
    ===================================================================== */
 :root {
-    /* The font used everywhere.
-       Also change the Google Fonts <link> in _includes/head.html if you switch fonts. */
-    --font-main: "Schibsted Grotesk","Helvetica Neue",Helvetica,Arial,sans-serif;
+    /* THE FONTS. Also change the Google Fonts <link> in _includes/head.html if you switch fonts.
+         --font-main    : text, buttons, menu, small labels
+         --font-heading : your name, titles, card titles (the elegant serif) */
+    --font-main: "Jost","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --font-heading: "Playfair Display",Georgia,"Times New Roman",serif;
 
     /* Color of the thin divider lines between sections and inside cards
        (made from the "secondary" color, so it follows _config.yml). */
     --line: rgba({{ site.color.secondary-rgb }},.16);
 
-    /* Overall page size. 1 = normal, 0.85 = a bit zoomed out, 0.75 = more zoomed out.
-       Affects EVERYTHING on the page. */
+    /* The elegant separator line (under the top bar and header, above the footer):
+       a thin line that fades out at both ends. Change .45 to make it stronger or fainter. */
+    --rule: linear-gradient(to right, transparent, rgba({{ site.color.secondary-rgb }},.45) 14%, rgba({{ site.color.secondary-rgb }},.45) 86%, transparent);
+
+    /* How long those separator lines are: exactly as wide as the page content,
+       not the whole screen (matches the Bootstrap container width at each screen size). */
+    --content-w: calc(100% - (30px * var(--s)));
+
+    /* OVERALL SIZE. One number scales the whole site: text, spacing, pictures, buttons, cards.
+         1    = full size
+         0.85 = a bit smaller (the default)      0.75 = noticeably smaller
+       Every size in this file is written as "N px x --s", so changing this one number resizes
+       everything evenly, including the width of the content column (the result looks like
+       zooming out in the browser, but the browser's own zoom is not touched). */
+    --s: 0.85;
+
+    /* Alternative to --s: the CSS "zoom" property. LEAVE THIS AT 1 when you use --s above
+       (using both would shrink the page twice). */
     --site-zoom: 1;
 
     /* FOOTER MODE - change these two lines together:
          Normal footer at the end of the page (default):  static  and  0px
-         Bar that is always visible, like the top bar:    fixed   and  58px
+         Bar that is always visible, like the top bar:    fixed   and  calc(58px * var(--s))
        (the second value keeps the bar from covering the end of the page) */
     --footer-position: static;
     --footer-space: 0px;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
     :root {
-        --site-zoom: 0.85;
+        --content-w: calc(720px * var(--s));
     }
 }
 
+@media (min-width: 992px) {
+    :root {
+        --content-w: calc(940px * var(--s));
+    }
+}
+
+@media (min-width: 1200px) {
+    :root {
+        --content-w: calc(1140px * var(--s));
+    }
+}
+
+
 /* =====================================================================
-   2. PAGE BASICS
+   2. PAGE BASICS  (including Bootstrap's own sizes, tied to the overall size --s)
    ===================================================================== */
 html {
     scroll-behavior: smooth;                 /* smooth scrolling for links like #page-top */
@@ -81,6 +112,7 @@ body {
     min-height: calc(100dvh / var(--site-zoom));
     padding-bottom: var(--footer-space);             /* only used when the footer is a fixed bar */
     overflow-x: hidden;
+    font-size: calc(15px * var(--s));                /* base size: all the em-based sizes (names, titles) follow it */
     font-family: var(--font-main);
     background-color: #{{ site.color.background }};  /* page background (color: background) */
     zoom: var(--site-zoom);
@@ -91,7 +123,7 @@ body > * {
 }
 
 p {
-    font-size: 20px;                         /* size of body text */
+    font-size: calc(20px * var(--s));                         /* size of body text */
 }
 
 /* All links use the main (primary) color */
@@ -104,24 +136,21 @@ a.active {
     color: #{{ site.color.primary }};
 }
 
+/* All headings (page titles, section titles) use the serif font, in normal capitalization.
+   To get ALL CAPITALS back, change "none" to "uppercase". */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-    text-transform: uppercase;
-    font-family: var(--font-main);
-    font-weight: 700;
+    text-transform: none;
+    font-family: var(--font-heading);
+    font-weight: 600;
 }
 
 .img-centered {
     margin: 0 auto;
-}
-
-/* Anything with the "hidden" attribute is really hidden (the Tags page filter relies on this) */
-[hidden] {
-    display: none !important;
 }
 
 .btn:focus,
@@ -130,36 +159,199 @@ h6 {
     outline: 0;
 }
 
+.btn:focus-visible {
+    outline: 2px solid #{{ site.color.primary }};     /* keyboard users only */
+    outline-offset: calc(2px * var(--s));
+}
+
 /* Jumping to an anchor leaves room for the fixed top bar */
 section[id] {
-    scroll-margin-top: 70px;
+    scroll-margin-top: calc(70px * var(--s));
+}
+
+
+/* ---- Bootstrap's own sizes, tied to the same scale -------------------------------------
+   Bootstrap sets sizes in fixed pixels too (headings, paragraphs, buttons, the grid, ...).
+   The lines below repeat Bootstrap's values multiplied by --s, so they shrink together
+   with everything else. Do not edit the numbers; change --s in section 1 instead. */
+h1, h2, h3 {
+    margin-top: calc(21px * var(--s));
+    margin-bottom: calc(10.5px * var(--s));
+}
+
+h4, h5, h6 {
+    margin-top: calc(10.5px * var(--s));
+    margin-bottom: calc(10.5px * var(--s));
+}
+
+h1 { font-size: calc(39px * var(--s)); }
+h2 { font-size: calc(32px * var(--s)); }
+h3 { font-size: calc(26px * var(--s)); }
+h4 { font-size: calc(19px * var(--s)); }
+h5 { font-size: calc(15px * var(--s)); }
+h6 { font-size: calc(13px * var(--s)); }
+
+p {
+    margin: 0 0 calc(10.5px * var(--s));
+}
+
+ul, ol {
+    margin-bottom: calc(10.5px * var(--s));
+    padding-left: calc(40px * var(--s));     /* the browser's built-in indent of bullet lists */
+}
+
+hr {
+    margin-top: calc(21px * var(--s));
+    margin-bottom: calc(21px * var(--s));
+}
+
+.lead {
+    margin-bottom: calc(21px * var(--s));
+    font-size: calc(17px * var(--s));
+}
+
+code {
+    padding: calc(2px * var(--s)) calc(4px * var(--s));
+    border-radius: calc(4px * var(--s));
+}
+
+pre {
+    padding: calc(10px * var(--s));
+    margin: 0 0 calc(10.5px * var(--s));
+    font-size: calc(14px * var(--s));
+    border-radius: calc(4px * var(--s));
+}
+
+blockquote {
+    padding: calc(10.5px * var(--s)) calc(21px * var(--s));
+    margin: 0 0 calc(21px * var(--s));
+    font-size: calc(18.75px * var(--s));
+}
+
+/* the page grid: the width of the content column, and the space around columns */
+.container {
+    padding-right: calc(15px * var(--s));
+    padding-left: calc(15px * var(--s));
+}
+
+.row {
+    margin-right: calc(-15px * var(--s));
+    margin-left: calc(-15px * var(--s));
+}
+
+[class*="col-"] {
+    padding-right: calc(15px * var(--s));
+    padding-left: calc(15px * var(--s));
+}
+
+/* The page banners (Projects, Articles, Contact, single pages) use the class name "page-header",
+   which is also a Bootstrap component, so they get Bootstrap's spacing: */
+.page-header {
+    padding-bottom: calc(9.5px * var(--s));
+    margin: calc(42px * var(--s)) 0 calc(21px * var(--s));
+}
+
+.list-inline {
+    margin-left: calc(-5px * var(--s));
+}
+
+.list-inline > li {
+    padding-right: calc(5px * var(--s));
+    padding-left: calc(5px * var(--s));
+}
+
+/* Bootstrap buttons */
+.btn {
+    padding: calc(10px * var(--s)) calc(15px * var(--s));
+    font-size: calc(15px * var(--s));
+    border-radius: calc(4px * var(--s));
+}
+
+.btn-lg {
+    padding: calc(18px * var(--s)) calc(27px * var(--s));
+    font-size: calc(19px * var(--s));
+    border-radius: calc(6px * var(--s));
+}
+
+/* Bootstrap's top bar and its brand (the name) */
+.navbar {
+    min-height: calc(60px * var(--s));
+    margin-bottom: calc(21px * var(--s));
+}
+
+.navbar-brand {
+    height: calc(60px * var(--s));
+    padding: calc(18.5px * var(--s)) calc(15px * var(--s)) calc(20.5px * var(--s));
+    font-size: calc(19px * var(--s));
+    line-height: calc(21px * var(--s));
+}
+
+@media (min-width: 768px) {
+    .lead {
+        font-size: calc(22.5px * var(--s));
+    }
+
+    .container {
+        width: calc(750px * var(--s));
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        width: calc(970px * var(--s));
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: calc(1170px * var(--s));
+    }
 }
 
 
 /* =====================================================================
    3. TOP BAR  (markup: _includes/nav.html)
    Menu button on the left; your name + the link buttons on the right.
+   The bar has the same color as the page (it is NOT a colored block). A thin
+   line under it, as long as the content, separates it from the page.
    ===================================================================== */
 .navbar {
-    text-transform: uppercase;
+    /* THE BAR HAS ITS OWN FIXED SIZE: the menu button, the link buttons and your name do NOT
+       change when the overall size --s (section 1) changes. To resize the bar, change this number
+       (0.85 = the size it has at the default overall size; 1 = full size). */
+    --s: 0.85;
+    font-size: calc(15px * var(--s));
     font-family: var(--font-main);
     font-weight: 700;
 }
 
 .navbar-default {
     border: 0;
+    background-color: #{{ site.color.background }};    /* same as the page background */
 }
 
-/* Bar height on tablets/desktops: the padding above and below the content */
-@media (min-width: 768px) {
-    .navbar-fixed-top {
-        padding: 10px 0;
-    }
+/* The thin line under the bar. Its length: --content-w (section 1) */
+.navbar::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--content-w);
+    height: 1px;
+    margin: 0 auto;
+    background: var(--rule);
+}
 
-    .navbar-fixed-top .navbar-brand {
-        font-size: 1.5em;                    /* size of your name in the bar */
-        transition: color .3s;
-    }
+/* Bar height: the padding above and below the content. The same at EVERY screen width,
+   so nothing in the bar ever jumps when the window is resized or the browser is zoomed. */
+.navbar-fixed-top {
+    padding: calc(10px * var(--s)) 0;
+}
+
+.navbar-fixed-top .navbar-brand {
+    font-size: 1.5em;                        /* size of your name in the bar */
+    transition: color .3s;
 }
 
 /* The row inside the bar. The Bootstrap "container" is not used, so the bar spans the full width. */
@@ -167,8 +359,8 @@ section[id] {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 25px;                         /* gap between the screen edge and the menu button / buttons */
-    min-height: 62px;                        /* keeps the menu button vertically centered, never touching the edge */
+    padding: 0 calc(25px * var(--s));                         /* gap between the screen edge and the menu button / buttons */
+    min-height: calc(62px * var(--s));                        /* keeps the menu button vertically centered, never touching the edge */
 }
 
 /* Bootstrap's clearfix pseudo-elements would act as extra flex items */
@@ -177,33 +369,55 @@ section[id] {
     display: none;
 }
 
-/* Your name */
+/* Your name. If a screen is so narrow that there is no room for it, it is cut with "..."
+   (instead of overlapping the menu button). Nothing else in the bar moves. */
 .nav-bar-inner .navbar-brand {
     float: none;
+    min-width: 0;
     margin: 0;
     padding-right: 0;
+    overflow: hidden;
     text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.navbar-default .navbar-brand {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: #{{ site.color.secondary }};
+}
+
+/* Hover / keyboard focus only. Plain ":focus" is NOT used, because a mouse click leaves focus
+   on the link, and it would still look highlighted when you come back with the Back button. */
+.navbar-default .navbar-brand:focus {
+    color: #{{ site.color.secondary }};
 }
 
 .navbar-default .navbar-brand:hover,
-.navbar-default .navbar-brand:focus {
-    color: #{{ site.color.accent }};
+.navbar-default .navbar-brand:focus-visible {
+    color: #{{ site.color.primary }};
 }
 
 /* Your name + the round link buttons, side by side */
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 18px;                               /* space between the name and the buttons */
+    min-width: 0;
+    gap: calc(18px * var(--s));                               /* space between the name and the buttons */
 }
 
-/* The three-bar menu button */
+/* The menu button: just three thin lines, no box.
+   The padding only makes the area you can click bigger; the negative left margin pulls it
+   back so the lines still start at the same distance from the screen edge. */
 .menu-toggle {
-    margin: 0;
-    padding: 13px 15px;                      /* button size around the bars */
+    position: relative;
+    left: 14px;                              /* moves the whole button to the right (bigger number = further right) */
+    margin: 0 0 0 calc(-15px * var(--s));
+    padding: calc(13px * var(--s)) calc(15px * var(--s));
     background: transparent;
-    border: 1px solid #1a242f;
-    border-radius: 4px;
+    border: 0;
+    border-radius: 0;
     cursor: pointer;
 }
 
@@ -211,26 +425,37 @@ section[id] {
     outline: 0;
 }
 
-.menu-toggle:hover {
-    background-color: rgba(255, 255, 255, .1);
+.menu-toggle:focus-visible {
+    outline: 2px solid #{{ site.color.primary }};     /* shown for keyboard users only */
+    outline-offset: calc(2px * var(--s));
 }
 
+/* Each line is drawn as a BORDER (a box with no height and a 2px top border), not as a filled box.
+   The browser always rounds a border to whole screen pixels, so the three lines are exactly
+   equally thick at every zoom level. (A filled box of 1.7px gets blurred, and the three
+   lines came out different.) These sizes are fixed on purpose: the bar does not scale. */
 .menu-toggle .icon-bar {
     display: block;
-    width: 32px;                             /* length of each bar */
-    height: 3px;                             /* thickness of each bar */
-    border-radius: 2px;
-    background-color: #fff;
+    width: 27px;                             /* length of each line */
+    height: 0;
+    border-top: 2px solid #{{ site.color.secondary }};   /* thickness of each line (thinner = smaller number, minimum 1px) */
+    background: none;
+    transition: border-color .2s ease;
 }
 
 .menu-toggle .icon-bar + .icon-bar {
-    margin-top: 6px;                         /* gap between the bars */
+    margin-top: 6px;                         /* gap between the lines */
+}
+
+.menu-toggle:hover .icon-bar,
+.menu-toggle:focus-visible .icon-bar {
+    border-top-color: #{{ site.color.primary }};      /* the lines take the main color on hover */
 }
 
 /* The round link buttons (email, GitHub, itch.io, LinkedIn). Which ones exist: footer_links in _config.yml */
 .nav-social {
     display: flex;
-    gap: 8px;
+    gap: calc(8px * var(--s));
     margin: 0;
     padding: 0;
     list-style: none;
@@ -240,58 +465,22 @@ section[id] {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;                             /* button size */
-    height: 40px;
-    border: 1px solid rgba(255,255,255,.4);
+    width: calc(40px * var(--s));                             /* button size */
+    height: calc(40px * var(--s));
+    border: 1px solid rgba({{ site.color.secondary-rgb }},.35);
     border-radius: 50%;
-    font-size: 17px;                         /* icon size */
-    color: #fff;
+    font-size: calc(17px * var(--s));                         /* icon size */
+    color: #{{ site.color.secondary }};
     text-decoration: none;
     transition: background .2s ease, color .2s ease, border-color .2s ease;
 }
 
 .nav-social .nav-social-btn:hover,
-.nav-social .nav-social-btn:focus {
-    color: #{{ site.color.secondary }};
-    background: #{{ site.color.accent }};
-    border-color: #{{ site.color.accent }};
+.nav-social .nav-social-btn:focus-visible {
+    color: #fff;
+    background: #{{ site.color.primary }};
+    border-color: #{{ site.color.primary }};
 }
-
-/* Phones: everything in the bar shrinks so name + 4 buttons + menu button all fit */
-@media (max-width: 575px) {
-    .nav-bar-inner {
-        padding: 0 12px;
-    }
-
-    .nav-right {
-        gap: 8px;
-    }
-
-    .nav-right .navbar-brand {
-        height: auto;
-        padding: 0;
-        font-size: 15px !important;
-    }
-
-    .nav-social {
-        gap: 5px;
-    }
-
-    .nav-social .nav-social-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 13px;
-    }
-
-    .menu-toggle {
-        padding: 10px 11px;
-    }
-
-    .menu-toggle .icon-bar {
-        width: 22px;
-    }
-}
-
 
 /* =====================================================================
    4. SLIDE-OUT MENU  (markup: _includes/nav.html, behavior: js/site.js)
@@ -320,9 +509,9 @@ section[id] {
     bottom: 0;
     left: 0;
     z-index: 1050;
-    width: 280px;                            /* panel width */
+    width: calc(280px * var(--s));                            /* panel width */
     max-width: 85%;
-    padding: 70px 0 30px;
+    padding: calc(70px * var(--s)) 0 calc(30px * var(--s));
     overflow-y: auto;
     background: #{{ site.color.secondary }};
     transform: translateX(-100%);            /* parked off-screen to the left */
@@ -347,13 +536,13 @@ body.menu-open .side-menu {
 
 .menu-close {
     position: absolute;
-    top: 12px;
-    right: 18px;
+    top: calc(12px * var(--s));
+    right: calc(18px * var(--s));
     padding: 0;
     border: 0;
     background: transparent;
     color: #fff;
-    font-size: 40px;
+    font-size: calc(40px * var(--s));
     line-height: 1;
     cursor: pointer;
 }
@@ -371,15 +560,15 @@ body.menu-open .side-menu {
 
 .side-menu-list a {
     display: block;
-    padding: 16px 30px;
+    padding: calc(16px * var(--s)) calc(30px * var(--s));
     color: #fff;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-family: var(--font-main);
-    font-size: 18px;
+    font-size: calc(18px * var(--s));
     font-weight: 700;
     text-decoration: none;
-    border-left: 4px solid transparent;
+    border-left: calc(4px * var(--s)) solid transparent;
 }
 
 .side-menu-list a:hover,
@@ -398,27 +587,37 @@ body.menu-open .side-menu {
 
 /* =====================================================================
    5. HOME HEADER  (markup: _includes/header.html)
-   The colored area at the top of the home page: picture on the left,
-   name + tagline centered in the middle.
+   Picture on the left, name + tagline centered in the middle.
+   There is no colored background: the text sits on the page, and a thin
+   line (as long as the content) closes the header.
    ===================================================================== */
 header {
-    --pic: 220px;                            /* size of the picture (also the empty space kept on the right) */
+    --pic: calc(190px * var(--s));                            /* size of the picture (also the empty space kept on the right) */
     text-align: center;
-    color: #fff;
-    background: #{{ site.color.primary }};   /* header color (color: primary) */
+    color: #{{ site.color.secondary }};      /* text color of the header (color: secondary) */
+}
+
+/* The thin line closing the header (on the home page AND on the page banners, section 6) */
+header::after {
+    content: "";
+    display: block;
+    width: var(--content-w);                 /* as long as the content, not the whole screen */
+    height: 1px;
+    margin: 0 auto;
+    background: var(--rule);
 }
 
 /* Same width as the sections below, so the picture sits above the Projects / Articles titles */
 header .container {
-    padding-top: 105px;                      /* must stay larger than the top bar's height */
-    padding-bottom: 35px;
+    padding-top: calc(105px * var(--s));                      /* must stay larger than the top bar's height */
+    padding-bottom: calc(35px * var(--s));
 }
 
 /* Phones: picture on top, text below */
 header .header-flex {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: calc(20px * var(--s));
     align-items: center;
     justify-items: center;
 }
@@ -437,28 +636,41 @@ header .intro-text {
 
 header .intro-text .name {
     display: block;
-    text-transform: none;
-    font-family: var(--font-main);
+    font-family: var(--font-heading);
     font-size: 2em;                          /* your name (phones) */
-    font-weight: 700;
+    font-weight: 600;
+    line-height: 1.15;
 }
 
 header .intro-text .skills {
     display: block;
     font-size: 1.25em;                       /* the tagline under your name */
     font-weight: 400;
+    color: rgba({{ site.color.secondary-rgb }},.82);
+}
+
+/* A link inside the tagline (for example your university) */
+header .intro-text .skills a {
+    color: #{{ site.color.primary }};
+    text-decoration: underline;
+    text-underline-offset: calc(3px * var(--s));
+}
+
+header .intro-text .skills a:hover,
+header .intro-text .skills a:focus-visible {
+    color: #{{ site.color.primary-dark }};
 }
 
 /* Tablets: picture on the left, text centered in the middle of the header.
    The empty third column is as wide as the picture, which keeps the text exactly centered. */
 @media (min-width: 640px) {
     header {
-        --pic: 160px;
+        --pic: calc(140px * var(--s));
     }
 
     header .header-flex {
         grid-template-columns: var(--pic) 1fr var(--pic);
-        gap: 30px;
+        gap: calc(30px * var(--s));
         justify-items: stretch;
     }
 
@@ -467,13 +679,15 @@ header .intro-text .skills {
         justify-self: start;
     }
 
-        header .intro-text {
+    header .intro-text {
         grid-column: 2;
     }
 
+    /* Moves the name + tagline to the right on the HOME header only (not on the banners).
+       Use a negative number to move it left. */
     header:not(.page-header) .intro-text {
         position: relative;
-        left: 60px;
+        left: calc(60px * var(--s));
     }
 
     header .intro-text .name {
@@ -484,7 +698,7 @@ header .intro-text .skills {
 /* Desktops: bigger picture and name */
 @media (min-width: 992px) {
     header {
-        --pic: 220px;
+        --pic: calc(190px * var(--s));
     }
 
     header .intro-text .name {
@@ -494,12 +708,14 @@ header .intro-text .skills {
 
 
 /* =====================================================================
-   6. PAGE BANNERS  (the colored title strip on Projects, Articles,
-   Contact, Tags and on every single project / article page)
+   6. PAGE BANNERS  (the title strip on Projects, Articles, Contact and on
+   every single project / article page). Same look as the home header:
+   no colored block, a thin line underneath (see "header::after" in section 5).
+   On a project page the tags appear in the banner, under the title.
    ===================================================================== */
 header.page-header .container {
-    padding-top: 110px;
-    padding-bottom: 40px;
+    padding-top: calc(110px * var(--s));
+    padding-bottom: calc(40px * var(--s));
 }
 
 header.page-header .intro-text .name {
@@ -507,10 +723,18 @@ header.page-header .intro-text .name {
     font-size: 2.25em;                       /* banner title */
 }
 
+/* The tags in a project banner: centered, no box */
+header.page-header .tag-list {
+    justify-content: center;
+    margin: calc(20px * var(--s)) 0 0;
+    padding: 0;
+    border: 0;
+}
+
 @media (min-width: 768px) {
     header.page-header .container {
-        padding-top: 150px;
-        padding-bottom: 60px;
+        padding-top: calc(150px * var(--s));
+        padding-bottom: calc(60px * var(--s));
     }
 
     header.page-header .intro-text .name {
@@ -524,25 +748,21 @@ header.page-header .intro-text .name {
    ===================================================================== */
 
 /* A band of the page: Projects and Articles on the home page, and the body of the
-   Projects / Articles / Contact / Tags pages. All of them use the same background. */
+   Projects / Articles / Contact pages. All of them use the same background, and there
+   is no line between neighbouring sections (the space between them separates them). */
 .home-section {
-    padding: 70px 0 80px;
+    padding: calc(70px * var(--s)) 0 calc(80px * var(--s));
     background: #{{ site.color.background }};
-}
-
-/* thin line between neighbouring sections */
-.home-section + .home-section {
-    border-top: 1px solid var(--line);
 }
 
 /* Pages that have a banner on top: a little less space above the cards */
 .home-section.list-page {
-    padding: 60px 0 90px;
+    padding: calc(60px * var(--s)) 0 calc(90px * var(--s));
 }
 
 /* Section title row ("Projects", "Articles"): aligned LEFT */
 .section-head {
-    margin-bottom: 30px;
+    margin-bottom: calc(30px * var(--s));
     text-align: left;
 }
 
@@ -554,61 +774,88 @@ header.page-header .intro-text .name {
 /* The divider line under each section title (markup: hr with class "section-line") */
 hr.section-line {
     height: 0;
-    margin: 14px 0 0;
+    margin: calc(14px * var(--s)) 0 0;
     border: 0;
     border-top: 1px solid rgba({{ site.color.secondary-rgb }},.3);
 }
 
 /* The row under the cards that holds the "Read more" button, with a subtle line above it */
 .section-more {
-    margin-top: 40px;
-    padding-top: 28px;
+    margin-top: calc(40px * var(--s));
+    padding-top: calc(4px * var(--s));       /* the "Read more" text sits right below the line */
     border-top: 1px solid var(--line);
-    text-align: left;
+    text-align: right;                       /* ... at the right end of it */
 }
 
 /* Pages made of text: a single project or article (layouts: project.html, post.html) */
 section.content-page {
-    padding: 60px 0 80px;
+    padding: calc(60px * var(--s)) 0 calc(80px * var(--s));
 }
 
 section.content-page img {
-    margin-bottom: 25px;
+    margin-bottom: calc(25px * var(--s));
+}
+
+/* Long web addresses (like the ones under "Resources") wrap instead of running off the screen */
+section.content-page a,
+section.content-page li,
+section.content-page p {
+    overflow-wrap: anywhere;
+}
+
+/* Jumping to a heading from the table of contents leaves room for the fixed top bar */
+section.content-page [id] {
+    scroll-margin-top: 90px;
+}
+
+/* Pictures and videos you put in an article or project (even with fixed width="..." in the tag)
+   never get wider than the text column, so they cannot push the page sideways on a phone. */
+section.content-page img,
+section.content-page video {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Figures (picture/video + caption): images placed side by side with their own margin
+   (style="display:inline-block; margin:10px") can be a few pixels wider than the column;
+   this stops that from making the whole page scroll sideways. */
+section.content-page figure {
+    overflow-x: hidden;
 }
 
 section.content-page .item-details {
-    margin: 30px 0;                          /* the Client / Date / Service line on a project page */
+    margin: calc(30px * var(--s)) 0;                          /* the Client / Date / Service line on a project page */
 }
 
 /* Headings and lists written in Markdown inside a project or article */
 section.content-page h2 {
-    margin: 40px 0 15px;
+    margin: calc(40px * var(--s)) 0 calc(15px * var(--s));
     font-size: 1.9em;
     text-transform: none;
 }
 
 section.content-page h3 {
-    margin: 30px 0 10px;
+    margin: calc(30px * var(--s)) 0 calc(10px * var(--s));
     text-transform: none;
 }
 
 section.content-page ul,
 section.content-page ol {
-    font-size: 20px;
+    font-size: calc(20px * var(--s));
 }
 
 
 /* =====================================================================
    8. CARDS  (markup: _includes/card.html)
    One card per project or article, used on the home page, the Projects
-   and Articles pages, and the Tags page.
+   and Articles pages.
    ===================================================================== */
 
 /* The grid of cards: 1 column on phones, 2 on tablets, 3 on desktops */
 .card-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 30px;                               /* space between cards */
+    gap: calc(30px * var(--s));                               /* space between cards */
 }
 
 @media (min-width: 640px) {
@@ -628,17 +875,28 @@ section.content-page ol {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border-radius: 6px;
+    border-radius: calc(6px * var(--s));
     background: #{{ site.color.card }};      /* card background (color: card) */
-    box-shadow: 0 2px 8px rgba({{ site.color.secondary-rgb }},.12);    /* faint shadow at rest */
+    box-shadow: 0 calc(2px * var(--s)) calc(8px * var(--s)) rgba({{ site.color.secondary-rgb }},.12);    /* faint shadow at rest */
     transition: box-shadow .25s ease, transform .25s ease;
 }
 
-/* Hover: the card lifts and gets a stronger, dark shadow */
-.card:hover,
-.card:focus-within {
-    transform: translateY(-3px);
-    box-shadow: 0 16px 32px rgba({{ site.color.secondary-rgb }},.38);
+/* Hover: the card lifts and gets a stronger, dark shadow.
+   Only on devices that really have a mouse (a tap on a phone would leave the card "hovered"),
+   and not while the page has just been opened or come back to with the Back button, until the
+   mouse moves again ("hover-off" is set by js/site.js). */
+@media (hover: hover) {
+    html:not(.hover-off) .card:hover {
+        transform: translateY(calc(-3px * var(--s)));
+        box-shadow: 0 calc(16px * var(--s)) calc(32px * var(--s)) rgba({{ site.color.secondary-rgb }},.38);
+    }
+}
+
+/* Keyboard users (Tab key): a ring around the whole card instead of the lift */
+.card-title a:focus-visible::after {
+    outline: 2px solid #{{ site.color.primary }};
+    outline-offset: calc(2px * var(--s));
+    border-radius: calc(6px * var(--s));
 }
 
 /* The picture area. Its shape matches the project pictures (900 x 650). */
@@ -671,27 +929,27 @@ section.content-page ol {
     justify-content: center;
     width: 100%;
     height: 100%;
-    font-size: 48px;
+    font-size: calc(48px * var(--s));
     color: rgba({{ site.color.secondary-rgb }},.35);
 }
 
 .card-body {
     flex: 1;
-    padding: 14px 20px 12px;
+    padding: calc(14px * var(--s)) calc(20px * var(--s)) calc(12px * var(--s));
 }
 
 /* Small date under the picture */
 .card-date {
     display: block;
-    font-size: 13px;
-    letter-spacing: .5px;
+    font-size: calc(13px * var(--s));
+    letter-spacing: calc(.5px * var(--s));
     text-transform: uppercase;
     color: rgba({{ site.color.secondary-rgb }},.65);
 }
 
 .card-title {
-    margin: 6px 0 8px;
-    font-size: 20px;
+    margin: calc(6px * var(--s)) 0 calc(8px * var(--s));
+    font-size: calc(20px * var(--s));
     text-transform: none;
 }
 
@@ -702,14 +960,16 @@ section.content-page ol {
     text-decoration: none;
 }
 
-.card:hover .card-title a {
-    color: #{{ site.color.primary }};        /* title turns to the main color on hover */
+@media (hover: hover) {
+    html:not(.hover-off) .card:hover .card-title a {
+        color: #{{ site.color.primary }};    /* title turns to the main color on hover */
+    }
 }
 
 /* The information text (description: in the project / article file) - at most 4 lines */
 .card-info {
     margin: 0;
-    font-size: 16px;
+    font-size: calc(16px * var(--s));
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 4;
@@ -731,90 +991,42 @@ section.content-page ol {
 
 
 /* =====================================================================
-   9. TAGS  (markup: _includes/tags.html, look of each tag: _data/tags.yml,
-   behavior of the Tags page: js/tags.js)
+   9. TAGS  (markup: _includes/tags.html, color and label of each tag: _data/tags.yml)
+   Tags are only labels: filled pills that do nothing when clicked.
+   Where they appear: the bottom of every card, the top (banner) of a project
+   page, the bottom of an article page.
    ===================================================================== */
 
-/* The row of tags at the bottom of a card */
+/* The row of pills at the bottom of a card */
 .tag-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: calc(6px * var(--s));
     margin: 0;
-    padding: 12px 20px 18px;
+    padding: calc(12px * var(--s)) calc(20px * var(--s)) calc(18px * var(--s));
     list-style: none;
     border-top: 1px solid var(--line);       /* subtle line above the tags */
 }
 
-/* Tags sit above the card's big link, so they stay separately clickable;
-   empty space in the tag row still opens the card. */
-.card .tag-list {
-    position: relative;
-    z-index: 2;
-    pointer-events: none;
-}
-
-.card .tag-list .tag {
-    pointer-events: auto;
-}
-
-/* Tags on a single project / article page: no box, just the tags */
-.content-page .tag-list {
-    margin: 25px 0;
-    padding: 0;
-    border: 0;
-}
-
-/* One tag. Its color comes from _data/tags.yml (set per tag); this is the default. */
+/* One pill. Its fill color comes from _data/tags.yml; this is the default for tags not listed there. */
 .tag {
     --tag-color: #{{ site.color.secondary }};
     display: inline-block;
-    padding: 2px 11px;
-    border: 1px solid var(--tag-color);
+    padding: calc(3px * var(--s)) calc(12px * var(--s));
     border-radius: 999px;
-    font-size: 13px;
+    font-size: calc(13px * var(--s));
     font-weight: 500;
     line-height: 1.6;
-    color: var(--tag-color);
-    background: rgba(255,255,255,.5);
-    background: color-mix(in srgb, var(--tag-color) 12%, white);   /* soft tint of the tag color */
-    text-decoration: none;
-}
-
-a.tag:hover,
-a.tag:focus {
+    letter-spacing: calc(.2px * var(--s));
     color: #fff;
     background: var(--tag-color);
-    text-decoration: none;
 }
 
-/* Tags page: the row of filter chips at the top */
-.tag-filter {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 0 0 45px;
+/* Tags on a single article page: no box, just the pills */
+.content-page .tag-list {
+    margin: calc(25px * var(--s)) 0;
     padding: 0;
-    list-style: none;
-}
-
-.tag-filter .tag {
-    padding: 5px 16px;
-    font-size: 15px;
-}
-
-/* The chip of the tag currently shown (js/tags.js adds the class "active") */
-a.tag.active {
-    color: #fff;
-    background: var(--tag-color);
-}
-
-.tag-block {
-    margin-bottom: 60px;
-}
-
-#tag-empty {
-    text-align: center;
+    border: 0;
 }
 
 
@@ -822,7 +1034,8 @@ a.tag.active {
    10. BUTTONS
    ===================================================================== */
 
-/* Main button ("Read more", contact buttons) */
+/* Main button: the filled brick buttons on the Contact page (email, GitHub, itch.io, LinkedIn).
+   The "Read more" link below has its own plain-text style. */
 .btn-main,
 a.btn-main {
     border: 1px solid #{{ site.color.primary }};
@@ -831,8 +1044,16 @@ a.btn-main {
     transition: background .2s ease, border-color .2s ease;
 }
 
-.btn-main:hover,
+/* a mouse click leaves the button focused: keep it looking normal (see the note in section 3) */
 .btn-main:focus,
+a.btn-main:focus {
+    border-color: #{{ site.color.primary }};
+    color: #fff;
+    background: #{{ site.color.primary }};
+}
+
+.btn-main:hover,
+.btn-main:focus-visible,
 .btn-main:active,
 a.btn-main:hover {
     border-color: #{{ site.color.primary-dark }};
@@ -840,19 +1061,63 @@ a.btn-main:hover {
     background: #{{ site.color.primary-dark }};     /* hover color (color: primary-dark) */
 }
 
-/* "All projects" / "All articles" back buttons on single pages */
-.btn-default {
-    border-color: #{{ site.color.secondary }};
-    color: #fff;
-    background-color: #{{ site.color.secondary }};
+/* "Read more" at the end of the Projects / Articles sections (home page): just TEXT.
+   No box, no border, no shadow, no outline in ANY state, also not while it is being clicked.
+   Same color as the headlines (color: secondary); on hover it turns brick and gets an underline.
+   "!important" is used on purpose: Bootstrap adds its own focus ring and pressed shadow
+   with very strong rules, and nothing else beats them. */
+.section-more .btn-main,
+.section-more .btn-main:focus,
+.section-more .btn-main:active,
+.section-more .btn-main:active:focus,
+.section-more .btn-main:hover {
+    padding: calc(6px * var(--s)) 0;         /* no sideways padding: the text ends exactly where the line ends */
+    border: 0 !important;
+    border-radius: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+    color: #{{ site.color.secondary }};
+    font-size: calc(22px * var(--s));        /* text size */
+    font-weight: 600;
+    text-decoration: none;
+    text-underline-offset: calc(4px * var(--s));
+}
+
+.section-more .btn-main:hover,
+.section-more .btn-main:active,
+.section-more .btn-main:active:focus,
+.section-more .btn-main:focus-visible {
+    color: #{{ site.color.primary-dark }};
+    text-decoration: underline;
+}
+
+/* The "All projects" / "All articles" back links on single pages: the same plain text look */
+.btn-default,
+.btn-default:focus,
+.btn-default:active,
+.btn-default:active:focus,
+.btn-default:active:hover,
+.btn-default:hover {
+    padding: calc(6px * var(--s)) 0;
+    border: 0 !important;
+    border-radius: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+    color: #{{ site.color.secondary }};
+    font-size: calc(19px * var(--s));        /* text size */
+    font-weight: 600;
+    text-decoration: none;
+    text-underline-offset: calc(4px * var(--s));
 }
 
 .btn-default:hover,
-.btn-default:focus,
-.btn-default:active {
-    border-color: #{{ site.color.primary }};
-    color: #fff;
-    background-color: #{{ site.color.primary }};
+.btn-default:active,
+.btn-default:active:hover,
+.btn-default:focus-visible {
+    color: #{{ site.color.primary-dark }};
+    text-decoration: underline;
 }
 
 
@@ -864,17 +1129,18 @@ a.btn-main:hover {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 14px;
-    margin-top: 25px;
+    gap: calc(14px * var(--s));
+    margin-top: calc(25px * var(--s));
 }
 
 
 /* =====================================================================
    12. FOOTER  (markup: _includes/footer.html)
-   Just the credit text, centered. Normal footer by default: it appears at
-   the end of the page, and on short pages (like Contact) it still sits at the
-   very bottom of the screen. To make it an always-visible bar, see
-   "FOOTER MODE" in section 1.
+   Just the credit text, centered, on the page background (no colored block).
+   A thin line above it, as long as the content, separates it from the page.
+   Normal footer by default: it appears at the end of the page, and on short
+   pages (like Contact) it still sits at the very bottom of the screen.
+   To make it an always-visible bar, see "FOOTER MODE" in section 1.
    ===================================================================== */
 .site-footer {
     position: var(--footer-position);
@@ -883,40 +1149,50 @@ a.btn-main:hover {
     left: 0;
     z-index: 1030;                           /* same level as the top bar */
     margin-top: auto;                        /* pushes the footer down on short pages */
-    color: #fff;
-    background: #{{ site.color.secondary }}; /* footer color: same as the top bar (color: secondary) */
+    color: #{{ site.color.secondary }};
+    background: #{{ site.color.background }};
+}
+
+/* The thin line above the footer */
+.site-footer::before {
+    content: "";
+    display: block;
+    width: var(--content-w);
+    height: 1px;
+    margin: 0 auto;
+    background: var(--rule);
 }
 
 .footer-bar {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 58px;                        /* footer height */
-    padding: 10px 25px;
+    min-height: calc(58px * var(--s));                        /* footer height */
+    padding: calc(10px * var(--s)) calc(25px * var(--s));
     text-align: center;
 }
 
 .footer-credit {
     margin: 0;
-    font-size: 14px;
+    font-size: calc(14px * var(--s));
     line-height: 1.4;
     opacity: .85;
 }
 
 .footer-credit a,
 .footer-credit a:hover,
-.footer-credit a:focus {
-    color: #{{ site.color.accent }};
+.footer-credit a:focus {  /* same color in every state, so nothing can stick */
+    color: #{{ site.color.primary }};
     text-decoration: underline;
 }
 
 @media (max-width: 767px) {
     .footer-bar {
-        padding: 8px 12px;
+        padding: calc(8px * var(--s)) calc(12px * var(--s));
     }
 
     .footer-credit {
-        font-size: 12px;
+        font-size: calc(12px * var(--s));
     }
 }
 
@@ -928,18 +1204,18 @@ a.btn-main:hover {
 .scroll-top {
     z-index: 1049;
     position: fixed;
-    right: 14px;
-    bottom: calc(var(--footer-space) + 16px);    /* stays above the footer when it is a fixed bar */
-    width: 50px;
-    height: 50px;
+    right: calc(14px * var(--s));
+    bottom: calc(var(--footer-space) + (16px * var(--s)));    /* stays above the footer when it is a fixed bar */
+    width: calc(50px * var(--s));
+    height: calc(50px * var(--s));
 }
 
 .scroll-top .btn {
-    width: 50px;
-    height: 50px;
+    width: calc(50px * var(--s));
+    height: calc(50px * var(--s));
     border-radius: 100%;
-    font-size: 20px;
-    line-height: 28px;
+    font-size: calc(20px * var(--s));
+    line-height: calc(28px * var(--s));
 }
 
 /* Hidden while the slide-out menu is open */

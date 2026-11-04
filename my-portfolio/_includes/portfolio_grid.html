@@ -1,7 +1,7 @@
 {% comment %}
   A GRID OF PROJECT CARDS (newest first). Projects = the files in _projects/.
     {% include portfolio_grid.html limit=3 %}   -> newest 3  (home page)
-    {% include portfolio_grid.html %}           -> all       (Projects page, Tags page)
+    {% include portfolio_grid.html %}           -> all       (Projects page)
   Grid columns and spacing: main.css section 8 (.card-grid).
 {% endcomment %}
 {% assign grid_projects = site.projects | sort: 'date' | reverse %}

@@ -1,14 +1,14 @@
 {% comment %}
   HOME HEADER (only on the home page): the big colored area with your picture, name and tagline.
   - Picture:  img/profile.png  (replace the file, keep the name, or change the filename below)
-  - Name:     "title" in _config.yml
+  - Name:     "header_name" in _config.yml (if it is empty, "title" is used)
   - Tagline:  "skills" in _config.yml
   - Look (sizes, spacing, layout): main.css section 5.
 {% endcomment %}
 <header>
   <div class="container">
     <div class="header-flex">
-      <img class="header-picture" src="{{ '/img/profile.png' | relative_url }}" alt="{{ site.title }}" />
+      <img class="header-picture" src="{{ '/img/profile.png' | relative_url }}" alt="{{ site.header_name | default: site.title }}" />
       <div class="intro-text">
         <span class="name">{{ site.header_name | default: site.title }}</span>
         <span class="skills">{{ site.skills }}</span>

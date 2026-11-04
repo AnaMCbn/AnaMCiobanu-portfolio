@@ -23,12 +23,13 @@
   <meta name="msvalidate.01" content="{{ site.bing_verify }}">{% endif %}
 
   {% comment %}
-    Icons (Font Awesome) and the font.
-    To change the font: replace the family name in the Google Fonts link below AND
-    change --font-main at the top of _includes/css/main.css.
+    Icons (Font Awesome) and the fonts.
+    Two fonts are loaded: Jost (text) and Playfair Display (names and titles).
+    To change a font: replace its family name in the Google Fonts link below AND
+    change --font-main / --font-heading at the top of _includes/css/main.css.
   {% endcomment %}
   <link rel="stylesheet" href="{{ '/css/font-awesome/css/all.min.css' | relative_url }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
 </head>

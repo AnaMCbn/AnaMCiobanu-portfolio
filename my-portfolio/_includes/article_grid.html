@@ -1,7 +1,7 @@
 {% comment %}
   A GRID OF ARTICLE CARDS (newest first). Articles = the files in _posts/ that have "layout: post".
     {% include article_grid.html limit=3 %}   -> newest 3  (home page)
-    {% include article_grid.html %}           -> all       (Articles page, Tags page)
+    {% include article_grid.html %}           -> all       (Articles page)
 {% endcomment %}
 {% assign grid_articles = site.posts | where: "layout", "post" %}
 {% if include.limit %}

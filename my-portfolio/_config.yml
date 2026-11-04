@@ -11,22 +11,28 @@
 # 1. ABOUT YOU
 # ---------------------------------------------------------------------
 
-# Your name. Shown in the top bar, the big home header and the browser tab title.
+# YOUR NAME. Three settings, so the name can be different in different places:
+#   title       : the text in the browser tab (and the fallback for the two below)
+#   nav_name    : the small name in the TOP BAR
+#   header_name : the big name in the HOME HEADER
+# If nav_name or header_name is empty, "title" is used there.
 title: Ana-Maria Ciobanu
-nav_name: Ana-Maria Ciobanu                 # the small name in the top bar
-header_name: Hi, I'm Ana! # the big name in the home header
+nav_name: Ana-Maria Ciobanu
+header_name: Hi, I'm Ana!
 
 # Your email address. Shown on the Contact page (the big email button).
-# The email icon in the top bar uses the "mailto:" link in footer_links below.
+# (The email icon in the top bar uses the Gmail link in footer_links below.)
 email: anamciobanu.dev@gmail.com
 
-# The line under your name in the home header.
-skills: 'I am a game programmer currently studying at <a href="https://www.buas.nl/en" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline">Breda University of Applied Sciences</a>. I enjoy developing gameplay systems and tools, with a focus on procedural generation and AI.'
+# The text under your name in the home header. It can contain HTML (for example the link to your university).
+# The link color is set in main.css (section 5), not here: color codes with curly braces do not work inside this file.
+skills: 'I am a game programmer currently studying at <a href="https://www.buas.nl/en" target="_blank" rel="noopener">Breda University of Applied Sciences</a>.
+ I enjoy developing gameplay systems and tools, with a focus on procedural generation and AI.'
 
 # For search engines and link previews (not visible on the page).
-description: "Hi, I'm Ana! I am gameplay programmer currently studying and Breda University of Applied Sciences."
+description: "Hi, I'm Ana! I am a game programming currently studying at Breda University of Applied Sciences."
 keywords: "portfolio, game programmer"
-meta_author: Ana Maria Ciobanu
+meta_author: Ana-Maria Ciobanu
 
 
 # ---------------------------------------------------------------------
@@ -56,7 +62,8 @@ color:
   secondary-dark: 63352C     # Slightly darker brown. Hover color of the side-menu entries.
   accent: EBBEAD             # LIGHT BRICK. Text on dark areas when hovered / active (menu, name, footer links).
   background: FAF5F3         # PAGE BACKGROUND. Behind the cards, in every section of every page.
-  card: FFF7ED               # Background of the cards themselves (warm cream).
+  card: FFF7ED               # Background of the cards themselves.
+
 
 # ---------------------------------------------------------------------
 # 4. LINK BUTTONS  (email, GitHub, itch.io, LinkedIn)
@@ -64,7 +71,7 @@ color:
 # buttons on the Contact page. To add a link, copy an entry. To hide one, empty its url.
 #   title : text on the Contact page button
 #   icon  : any Font Awesome icon class, e.g. "fa-brands fa-github"
-#   url   : where it goes. Email links start with "mailto:"
+#   url   : where it goes. The email entry opens a new Gmail message; a "mailto:" link also works but needs a mail program on the visitor's computer.
 # ---------------------------------------------------------------------
 footer_links:
   - title: Email
@@ -78,7 +85,7 @@ footer_links:
     url: https://orbete.itch.io
   - title: LinkedIn
     icon: fa-brands fa-linkedin
-    url: https://www.linkedin.com
+    url: https://linkedin.com/in/ana-maria-ciobanu-529763353
 
 
 # ---------------------------------------------------------------------
