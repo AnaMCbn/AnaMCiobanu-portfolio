@@ -6,7 +6,7 @@ date: 2026-11-4           # Shown small under the card picture. Also sets the or
 img: TileEditor/3dtileditorss.png             # The picture, a file in img/portfolio/ (card + top of the page)
 alt: 3D Tile Editor Plugin for Unreal Engine preview     # Describes the picture for screen readers and Google
 duration: 2 months   # Free text in the details line of the project page (e.g. "Spring 2026")
-tags: [Tool, PCG, Uni]        # Tags on the card and the page. Colors/labels: _data/tags.yml
+tags: [Solo,PCG, Tool, Uni]        # Tags on the card and the page. Colors/labels: _data/tags.yml
 description: A plugin for Unreal Engine that provides a 3D tile editor with complex auto-painting functionality using Wave Function Collapse.   # The text on the card (max 4 lines)
 
 ---

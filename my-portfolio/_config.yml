@@ -54,15 +54,14 @@ bing_verify:
 # These are used in _includes/css/main.css, so changing one changes the whole site.
 # ---------------------------------------------------------------------
 color:
-  primary: C3614B            # MAIN COLOR (brick). Home header and page banners, links, buttons, article thumbnails.
-  primary-dark: A84B38       # Button color while hovered / pressed.
-  secondary: 764137          # DARK COLOR (brown). Top bar, side menu, footer, text, card shadows.
-  secondary-rgb: "118,65,55" # The SAME color as "secondary" written as red,green,blue.
-                             #   Used for card shadows and thin lines. Must match "secondary"!
-  secondary-dark: 63352C     # Slightly darker brown. Hover color of the side-menu entries.
-  accent: EBBEAD             # LIGHT BRICK. Text on dark areas when hovered / active (menu, name, footer links).
-  background: FAF5F3         # PAGE BACKGROUND. Behind the cards, in every section of every page.
-  card: FFF7ED               # Background of the cards themselves.
+  primary: 8A6A6A
+  primary-dark: 614848 
+  secondary: 515C47
+  secondary-rgb: "108,123,95"
+  secondary-dark: 49523D
+  accent: F0EC93
+  background: F5F5F5
+  card: E5E2E2
 
 
 # ---------------------------------------------------------------------
