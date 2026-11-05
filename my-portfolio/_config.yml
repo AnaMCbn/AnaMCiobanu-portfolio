@@ -41,7 +41,7 @@ meta_author: Ana-Maria Ciobanu
 #   Custom domain, or username.github.io:   url: "https://yourname.com"      baseurl: ""
 #   GitHub project page (user.github.io/repo):  url: "https://user.github.io"  baseurl: "/repo"
 # ---------------------------------------------------------------------
-url: ""
+url: "https://anamcbn.github.io"
 baseurl: ""
 
 # Optional: codes that prove you own the site to Google / Bing. Leave empty if unused.
