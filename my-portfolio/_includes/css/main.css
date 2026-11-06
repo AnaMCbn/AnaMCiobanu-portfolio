@@ -3,78 +3,74 @@
  * Code licensed under the Apache License v2.0.
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
+{%- assign card_out = 6 -%}
+{%- assign card_den = card_out | times: 2 | plus: 100 -%}
+{%- assign card_fade = card_out | times: 100.0 | divided_by: card_den | round: 3 -%}
+{%- assign btn_out = 40 -%}
+{%- assign btn_core = 35 -%}
+{%- assign btn_cover = 100 | minus: btn_core -%}
+{%- assign cbtn_out = 25 -%}
+{%- assign cbtn_core = 35 -%}
+{%- assign cbtn_cover = 100 | minus: cbtn_core -%}
+{%- assign rbtn_out = 50 -%}
+{%- assign rbtn_core = 40 -%}
+{%- assign rbtn_cover = 100 | minus: rbtn_core -%}
+{%- assign pic_out = 30 -%}
+{%- assign pic_den = pic_out | times: 2 | plus: 100 -%}
+{%- assign pic_cover = pic_out | times: 200.0 | divided_by: pic_den | round: 3 -%}
+{%- assign frame_seeds = "11,23,37" | split: "," -%}
+{%- assign line_rgb = site.color.lines | split: "," -%}
+{%- assign hexd = "0123456789ABCDEF" -%}
+{%- capture lines_hex -%}
+{%- for c in line_rgb -%}
+{%- assign n = c | plus: 0 -%}
+{%- assign hi = n | divided_by: 16 -%}
+{%- assign lo = n | modulo: 16 -%}
+{{ hexd | slice: hi, 1 }}{{ hexd | slice: lo, 1 }}
+{%- endfor -%}
+{%- endcapture -%}
+{% capture st_line  %}{% include stipple.svg color=lines_hex freq="0.80" seed="17" max="0.85" shape="line" cover="100" fade="14" curve="2" %}{% endcapture %}
+{% capture st_card  %}{% include stipple.svg color=site.color.background freq="0.60" seed="43" max="0.15" lift="0.3" shape="rect" cover="100" fade="0" curve="1" stitch="yes" %}{% endcapture %}
+{% capture st_cline %}{% include stipple.svg color=site.color.background freq="0.75" seed="17" max="0.85" shape="line" cover="100" fade="14" curve="2" %}{% endcapture %}
+{% capture st_top   %}{% include stipple.svg color=site.color.shadow-particles freq="0.75" seed="7"  max="0.40" shape="down" cover="100" fade="35" curve="6" %}{% endcapture %}
+{% capture st_shade %}{% include stipple.svg color=site.color.shadow-particles freq="0.75" seed="5"  max="0.30" shape="down" cover="100" fade="10" curve="2" %}{% endcapture %}
+{% capture st_pic   %}{% include stipple.svg color=site.color.shadow-particles freq="0.75" seed="13" max="0.70" shape="radial" cover=pic_cover curve="6" %}{% endcapture %}
+{% capture st_page  %}{% include stipple.svg color=site.color.bg-particles  freq="0.45" seed="41" max="0.05" lift="0.3" shape="rect" cover="100" fade="0" curve="1" stitch="yes" %}{% endcapture %}
 
-/* =====================================================================
-   main.css  -  ALL of this site's own styling
 
-   HOW IT IS BUILT
-   style.css (in the site root) pastes two files together:
-     1. _includes/css/bootstrap.min.css  - Bootstrap/Flatly: the grid, buttons, base look
-     2. this file                        - everything specific to this site
-   This file comes second, so its rules win over Bootstrap's.
-
-   COLORS
-   Colors are NOT typed in here. The bits that look like "site.color.primary" inside
-   double curly braces are filled in from the "color:" list in _config.yml when the
-   site is built. To change a color, change it in _config.yml (then restart jekyll serve).
-
-   CONTENTS
-     1. Settings (variables you can change)
-     2. Page basics (body, text, links, headings)
-     3. Top bar
-     4. Slide-out menu
-     5. Home header (picture + name)
-     6. Page banners (Projects / Articles / Contact / single pages)
-     7. Sections, divider lines, text pages
-     8. Cards (projects + articles)
-     9. Tags
-    10. Buttons
-    11. Contact page
-    12. Footer
-    13. Scroll-to-top button
-   ===================================================================== */
-
-
-/* =====================================================================
-   1. SETTINGS - the values most likely to be changed
-   ===================================================================== */
 :root {
-    /* THE FONTS. Also change the Google Fonts <link> in _includes/head.html if you switch fonts.
-         --font-main    : text, buttons, menu, small labels
-         --font-heading : your name, titles, card titles (the elegant serif) */
-    --font-main: "Jost","Helvetica Neue",Helvetica,Arial,sans-serif;
-    --font-heading: "Playfair Display",Georgia,"Times New Roman",serif;
-
-    /* Color of the thin divider lines between sections and inside cards
-       (made from the "secondary" color, so it follows _config.yml). */
-    --line: rgba({{ site.color.secondary-rgb }},.16);
-
-    /* The elegant separator line (under the top bar and header, above the footer):
-       a thin line that fades out at both ends. Change .45 to make it stronger or fainter. */
-    --rule: linear-gradient(to right, transparent, rgba({{ site.color.secondary-rgb }},.45) 14%, rgba({{ site.color.secondary-rgb }},.45) 86%, transparent);
-
-    /* How long those separator lines are: exactly as wide as the page content,
-       not the whole screen (matches the Bootstrap container width at each screen size). */
+    --font-main: "IM Fell DW Pica",Georgia,"Times New Roman",serif;
+    --font-heading: "IM Fell DW Pica",Georgia,"Times New Roman",serif;
     --content-w: calc(100% - (30px * var(--s)));
-
-    /* OVERALL SIZE. One number scales the whole site: text, spacing, pictures, buttons, cards.
-         1    = full size
-         0.85 = a bit smaller (the default)      0.75 = noticeably smaller
-       Every size in this file is written as "N px x --s", so changing this one number resizes
-       everything evenly, including the width of the content column (the result looks like
-       zooming out in the browser, but the browser's own zoom is not touched). */
     --s: 0.85;
-
-    /* Alternative to --s: the CSS "zoom" property. LEAVE THIS AT 1 when you use --s above
-       (using both would shrink the page twice). */
     --site-zoom: 1;
-
-    /* FOOTER MODE - change these two lines together:
-         Normal footer at the end of the page (default):  static  and  0px
-         Bar that is always visible, like the top bar:    fixed   and  calc(58px * var(--s))
-       (the second value keeps the bar from covering the end of the page) */
     --footer-position: static;
     --footer-space: 0px;
+    --line-w: 2px;
+    --pline-h: calc(8px * var(--s));
+    --shade-h: calc(48px * var(--s));
+    --shimmer: 0.9s;
+    --btn-out: {{ btn_out | divided_by: 100.0 }};
+    --cbtn-out: {{ cbtn_out | divided_by: 100.0 }};
+    --rbtn-out: {{ rbtn_out | divided_by: 100.0 }};
+    --pic-out: {{ pic_out | divided_by: 100.0 }};
+    --stipple-line:  url("data:image/svg+xml,{{ st_line  | strip_newlines | url_encode | replace: '+', '%20' }}");
+    --stipple-cline: url("data:image/svg+xml,{{ st_cline | strip_newlines | url_encode | replace: '+', '%20' }}");
+    --stipple-top:   url("data:image/svg+xml,{{ st_top   | strip_newlines | url_encode | replace: '+', '%20' }}");
+    --stipple-shade: url("data:image/svg+xml,{{ st_shade | strip_newlines | url_encode | replace: '+', '%20' }}");
+    --stipple-page:  url("data:image/svg+xml,{{ st_page  | strip_newlines | url_encode | replace: '+', '%20' }}");
+    --stipple-card:  url("data:image/svg+xml,{{ st_card  | strip_newlines | url_encode | replace: '+', '%20' }}");
+    --stipple-pic:   url("data:image/svg+xml,{{ st_pic   | strip_newlines | url_encode | replace: '+', '%20' }}");
+{%- for sd in frame_seeds %}
+{%- capture pic_drop %}{% include stipple.svg color=site.color.shadow-particles-dark freq="0.75" seed=sd max="0.65" shape="rect" cover="100" fade=card_fade curve="3" %}{% endcapture %}
+    --stipple-drop-{{ forloop.index }}: url("data:image/svg+xml,{{ pic_drop | strip_newlines | url_encode | replace: '+', '%20' }}");
+{%- capture pic_btn %}{% include stipple.svg color=site.color.shadow-particles-dark freq="0.75" seed=sd max="0.95" shape="radial" cover=btn_cover curve="smooth" %}{% endcapture %}
+    --stipple-btn-{{ forloop.index }}: url("data:image/svg+xml,{{ pic_btn | strip_newlines | url_encode | replace: '+', '%20' }}");
+{%- capture pic_cbtn %}{% include stipple.svg color=site.color.shadow-particles-dark freq="0.75" seed=sd max="0.95" shape="radial" cover=cbtn_cover curve="smooth" %}{% endcapture %}
+    --stipple-cbtn-{{ forloop.index }}: url("data:image/svg+xml,{{ pic_cbtn | strip_newlines | url_encode | replace: '+', '%20' }}");
+{%- capture pic_rbtn %}{% include stipple.svg color=site.color.shadow-particles-dark freq="0.75" seed=sd max="0.95" shape="radial" cover=rbtn_cover curve="smooth" %}{% endcapture %}
+    --stipple-rbtn-{{ forloop.index }}: url("data:image/svg+xml,{{ pic_rbtn | strip_newlines | url_encode | replace: '+', '%20' }}");
+{%- endfor %}
 }
 
 @media (min-width: 768px) {
@@ -96,25 +92,25 @@
 }
 
 
-/* =====================================================================
-   2. PAGE BASICS  (including Bootstrap's own sizes, tied to the overall size --s)
-   ===================================================================== */
 html {
-    scroll-behavior: smooth;                 /* smooth scrolling for links like #page-top */
+    scroll-behavior: smooth;
 }
 
-/* The page is a column at least as tall as the screen.
-   That is what lets the footer sit at the very bottom even on short pages (see 12). */
 body {
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh / var(--site-zoom));      /* divided by the zoom so it still fills the screen */
+    min-height: calc(100vh / var(--site-zoom));
     min-height: calc(100dvh / var(--site-zoom));
-    padding-bottom: var(--footer-space);             /* only used when the footer is a fixed bar */
+    padding-bottom: var(--footer-space);
     overflow-x: hidden;
-    font-size: calc(15px * var(--s));                /* base size: all the em-based sizes (names, titles) follow it */
+    font-size: calc(15px * var(--s));
     font-family: var(--font-main);
-    background-color: #{{ site.color.background }};  /* page background (color: background) */
+    font-synthesis-weight: none;
+    color: #{{ site.color.text-color }};
+    background-color: #{{ site.color.background }};
+    background-image: var(--stipple-page);
+    background-size: 480px 480px;
+    background-repeat: repeat;
     zoom: var(--site-zoom);
 }
 
@@ -123,21 +119,23 @@ body > * {
 }
 
 p {
-    font-size: calc(20px * var(--s));                         /* size of body text */
+    margin: 0 0 calc(10.5px * var(--s));
+    font-size: calc(20px * var(--s));
 }
 
-/* All links use the main (primary) color */
 a,
-a:hover,
 a:focus,
 a:active,
 a.active {
     outline: 0;
-    color: #{{ site.color.primary }};
+    color: #{{ site.color.link-color }};
 }
 
-/* All headings (page titles, section titles) use the serif font, in normal capitalization.
-   To get ALL CAPITALS back, change "none" to "uppercase". */
+a:hover {
+    outline: 0;
+    color: #{{ site.color.link-hovered }};
+}
+
 h1,
 h2,
 h3,
@@ -147,33 +145,9 @@ h6 {
     text-transform: none;
     font-family: var(--font-heading);
     font-weight: 600;
+    color: #{{ site.color.title-color }};
 }
 
-.img-centered {
-    margin: 0 auto;
-}
-
-.btn:focus,
-.btn:active,
-.btn.active {
-    outline: 0;
-}
-
-.btn:focus-visible {
-    outline: 2px solid #{{ site.color.primary }};     /* keyboard users only */
-    outline-offset: calc(2px * var(--s));
-}
-
-/* Jumping to an anchor leaves room for the fixed top bar */
-section[id] {
-    scroll-margin-top: calc(70px * var(--s));
-}
-
-
-/* ---- Bootstrap's own sizes, tied to the same scale -------------------------------------
-   Bootstrap sets sizes in fixed pixels too (headings, paragraphs, buttons, the grid, ...).
-   The lines below repeat Bootstrap's values multiplied by --s, so they shrink together
-   with everything else. Do not edit the numbers; change --s in section 1 instead. */
 h1, h2, h3 {
     margin-top: calc(21px * var(--s));
     margin-bottom: calc(10.5px * var(--s));
@@ -191,13 +165,9 @@ h4 { font-size: calc(19px * var(--s)); }
 h5 { font-size: calc(15px * var(--s)); }
 h6 { font-size: calc(13px * var(--s)); }
 
-p {
-    margin: 0 0 calc(10.5px * var(--s));
-}
-
 ul, ol {
     margin-bottom: calc(10.5px * var(--s));
-    padding-left: calc(40px * var(--s));     /* the browser's built-in indent of bullet lists */
+    padding-left: calc(40px * var(--s));
 }
 
 hr {
@@ -228,7 +198,6 @@ blockquote {
     font-size: calc(18.75px * var(--s));
 }
 
-/* the page grid: the width of the content column, and the space around columns */
 .container {
     padding-right: calc(15px * var(--s));
     padding-left: calc(15px * var(--s));
@@ -244,8 +213,6 @@ blockquote {
     padding-left: calc(15px * var(--s));
 }
 
-/* The page banners (Projects, Articles, Contact, single pages) use the class name "page-header",
-   which is also a Bootstrap component, so they get Bootstrap's spacing: */
 .page-header {
     padding-bottom: calc(9.5px * var(--s));
     margin: calc(42px * var(--s)) 0 calc(21px * var(--s));
@@ -260,7 +227,6 @@ blockquote {
     padding-left: calc(5px * var(--s));
 }
 
-/* Bootstrap buttons */
 .btn {
     padding: calc(10px * var(--s)) calc(15px * var(--s));
     font-size: calc(15px * var(--s));
@@ -273,17 +239,23 @@ blockquote {
     border-radius: calc(6px * var(--s));
 }
 
-/* Bootstrap's top bar and its brand (the name) */
-.navbar {
-    min-height: calc(60px * var(--s));
-    margin-bottom: calc(21px * var(--s));
+.btn:focus,
+.btn:active,
+.btn.active {
+    outline: 0;
 }
 
-.navbar-brand {
-    height: calc(60px * var(--s));
-    padding: calc(18.5px * var(--s)) calc(15px * var(--s)) calc(20.5px * var(--s));
-    font-size: calc(19px * var(--s));
-    line-height: calc(21px * var(--s));
+.btn:focus-visible {
+    outline: 2px solid #{{ site.color.button }};
+    outline-offset: calc(2px * var(--s));
+}
+
+.img-centered {
+    margin: 0 auto;
+}
+
+section[id] {
+    scroll-margin-top: calc(70px * var(--s));
 }
 
 @media (min-width: 768px) {
@@ -309,311 +281,182 @@ blockquote {
 }
 
 
-/* =====================================================================
-   3. TOP BAR  (markup: _includes/nav.html)
-   Menu button on the left; your name + the link buttons on the right.
-   The bar has the same color as the page (it is NOT a colored block). A thin
-   line under it, as long as the content, separates it from the page.
-   ===================================================================== */
 .navbar {
-    /* THE BAR HAS ITS OWN FIXED SIZE: the menu button, the link buttons and your name do NOT
-       change when the overall size --s (section 1) changes. To resize the bar, change this number
-       (0.85 = the size it has at the default overall size; 1 = full size). */
     --s: 0.85;
+    min-height: calc(60px * var(--s));
+    margin-bottom: calc(21px * var(--s));
     font-size: calc(15px * var(--s));
     font-family: var(--font-main);
     font-weight: 700;
+    isolation: isolate;
 }
 
 .navbar-default {
     border: 0;
-    background-color: #{{ site.color.background }};    /* same as the page background */
+    background-color: #{{ site.color.background }};
+    background-image: var(--stipple-page);
+    background-size: 480px 480px;
+    background-repeat: repeat;
 }
 
-/* The thin line under the bar. Its length: --content-w (section 1) */
-.navbar::after {
-    content: "";
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: var(--content-w);
-    height: 1px;
-    margin: 0 auto;
-    background: var(--rule);
-}
-
-/* Bar height: the padding above and below the content. The same at EVERY screen width,
-   so nothing in the bar ever jumps when the window is resized or the browser is zoomed. */
 .navbar-fixed-top {
     padding: calc(10px * var(--s)) 0;
 }
 
-.navbar-fixed-top .navbar-brand {
-    font-size: 1.5em;                        /* size of your name in the bar */
-    transition: color .3s;
+.navbar::before {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: var(--stipple-top) 0 0 / 100% 100% no-repeat;
+    transform: scaleY(-1);
 }
 
-/* The row inside the bar. The Bootstrap "container" is not used, so the bar spans the full width. */
+.navbar::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: calc((var(--line-w) - var(--pline-h)) / 2);
+    left: 0;
+    width: var(--content-w);
+    height: var(--pline-h);
+    margin: 0 auto;
+    background: var(--stipple-line) 0 0 / 100% 100% no-repeat;
+}
+
 .nav-bar-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 calc(25px * var(--s));                         /* gap between the screen edge and the menu button / buttons */
-    min-height: calc(62px * var(--s));                        /* keeps the menu button vertically centered, never touching the edge */
+    padding: 0 calc(25px * var(--s));
+    min-height: calc(62px * var(--s));
 }
 
-/* Bootstrap's clearfix pseudo-elements would act as extra flex items */
 .nav-bar-inner:before,
 .nav-bar-inner:after {
     display: none;
 }
 
-/* Your name. If a screen is so narrow that there is no room for it, it is cut with "..."
-   (instead of overlapping the menu button). Nothing else in the bar moves. */
-.nav-bar-inner .navbar-brand {
-    float: none;
-    min-width: 0;
+.nav-bar-inner .nav-links {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: calc(8px * var(--s));
+    margin: 0 auto 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-bar-inner .nav-links > li {
+    display: block;
     margin: 0;
-    padding-right: 0;
-    overflow: hidden;
-    text-align: right;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    padding: 0;
+    list-style: none;
 }
 
-.navbar-default .navbar-brand {
+a.nav-btn {
+    display: block;
+    padding: calc(8px * var(--s)) calc(14px * var(--s));
+    color: #{{ site.color.button }};
     font-family: var(--font-heading);
-    font-weight: 600;
-    color: #{{ site.color.secondary }};
+    font-size: calc(22px * var(--s));
+    font-weight: 700;
+    text-decoration: none;
 }
 
-/* Hover / keyboard focus only. Plain ":focus" is NOT used, because a mouse click leaves focus
-   on the link, and it would still look highlighted when you come back with the Back button. */
-.navbar-default .navbar-brand:focus {
-    color: #{{ site.color.secondary }};
-}
-
-.navbar-default .navbar-brand:hover,
-.navbar-default .navbar-brand:focus-visible {
-    color: #{{ site.color.primary }};
-}
-
-/* Your name + the round link buttons, side by side */
 .nav-right {
     display: flex;
     align-items: center;
-    min-width: 0;
-    gap: calc(18px * var(--s));                               /* space between the name and the buttons */
 }
 
-/* The menu button: just three thin lines, no box.
-   The padding only makes the area you can click bigger; the negative left margin pulls it
-   back so the lines still start at the same distance from the screen edge. */
-.menu-toggle {
-    position: relative;
-    left: 14px;                              /* moves the whole button to the right (bigger number = further right) */
-    margin: 0 0 0 calc(-15px * var(--s));
-    padding: calc(13px * var(--s)) calc(15px * var(--s));
-    background: transparent;
-    border: 0;
-    border-radius: 0;
-    cursor: pointer;
-}
-
-.menu-toggle:focus {
-    outline: 0;
-}
-
-.menu-toggle:focus-visible {
-    outline: 2px solid #{{ site.color.primary }};     /* shown for keyboard users only */
-    outline-offset: calc(2px * var(--s));
-}
-
-/* Each line is drawn as a BORDER (a box with no height and a 2px top border), not as a filled box.
-   The browser always rounds a border to whole screen pixels, so the three lines are exactly
-   equally thick at every zoom level. (A filled box of 1.7px gets blurred, and the three
-   lines came out different.) These sizes are fixed on purpose: the bar does not scale. */
-.menu-toggle .icon-bar {
-    display: block;
-    width: 27px;                             /* length of each line */
-    height: 0;
-    border-top: 2px solid #{{ site.color.secondary }};   /* thickness of each line (thinner = smaller number, minimum 1px) */
-    background: none;
-    transition: border-color .2s ease;
-}
-
-.menu-toggle .icon-bar + .icon-bar {
-    margin-top: 6px;                         /* gap between the lines */
-}
-
-.menu-toggle:hover .icon-bar,
-.menu-toggle:focus-visible .icon-bar {
-    border-top-color: #{{ site.color.primary }};      /* the lines take the main color on hover */
-}
-
-/* The round link buttons (email, GitHub, itch.io, LinkedIn). Which ones exist: footer_links in _config.yml */
 .nav-social {
     display: flex;
-    gap: calc(8px * var(--s));
+    gap: calc(20px * var(--s));
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
 .nav-social .nav-social-btn {
+    position: relative;
+    isolation: isolate;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: calc(40px * var(--s));                             /* button size */
+    width: calc(40px * var(--s));
     height: calc(40px * var(--s));
-    border: 1px solid rgba({{ site.color.secondary-rgb }},.35);
+    border: 1px solid;
     border-radius: 50%;
-    font-size: calc(17px * var(--s));                         /* icon size */
-    color: #{{ site.color.secondary }};
+    font-size: calc(17px * var(--s));
+    color: #{{ site.color.button }};
     text-decoration: none;
-    transition: background .2s ease, color .2s ease, border-color .2s ease;
 }
 
-.nav-social .nav-social-btn:hover,
-.nav-social .nav-social-btn:focus-visible {
-    color: #fff;
-    background: #{{ site.color.primary }};
-    border-color: #{{ site.color.primary }};
-}
-
-/* =====================================================================
-   4. SLIDE-OUT MENU  (markup: _includes/nav.html, behavior: js/site.js)
-   The panel that slides in from the left. js/site.js adds the class
-   "menu-open" to the page, and the rules below react to that class.
-   ===================================================================== */
-
-/* Dark layer over the page while the menu is open (clicking it closes the menu) */
-.menu-overlay {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 1040;
-    background: rgba(0, 0, 0, .5);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity .3s ease, visibility .3s;
-}
-
-/* The panel itself */
-.side-menu {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 1050;
-    width: calc(280px * var(--s));                            /* panel width */
-    max-width: 85%;
-    padding: calc(70px * var(--s)) 0 calc(30px * var(--s));
-    overflow-y: auto;
-    background: #{{ site.color.secondary }};
-    transform: translateX(-100%);            /* parked off-screen to the left */
-    visibility: hidden;
-    transition: transform .3s ease, visibility .3s;
-}
-
-/* Menu open: slide the panel in, show the overlay, stop the page behind from scrolling */
-body.menu-open {
-    overflow: hidden;
-}
-
-body.menu-open .menu-overlay {
-    opacity: 1;
-    visibility: visible;
-}
-
-body.menu-open .side-menu {
-    transform: translateX(0);
-    visibility: visible;
-}
-
-.menu-close {
+.nav-social .nav-social-btn::before {
+    content: "";
     position: absolute;
-    top: calc(12px * var(--s));
-    right: calc(18px * var(--s));
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: #fff;
-    font-size: calc(40px * var(--s));
-    line-height: 1;
-    cursor: pointer;
+    z-index: -1;
+    pointer-events: none;
+    inset: calc(var(--rbtn-out) * -100%);
+    background: var(--stipple-rbtn-1) 0 0 / 100% 100% no-repeat;
+    transform: scale(0);
 }
 
-.menu-close:focus {
-    outline: 0;
+@media (hover: hover) {
+    html:not(.hover-off) .nav-social .nav-social-btn:hover {
+        border-color: transparent;
+        color: #{{ site.color.button-hovered }};
+    }
+
+    html:not(.hover-off) .nav-social .nav-social-btn:hover::before {
+        transform: scale(1);
+        animation: shimmer-rbtn var(--shimmer) steps(1, end) infinite;
+    }
 }
 
-/* The menu entries: About, Projects, Articles, Contact */
-.side-menu-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+.nav-social .nav-social-btn:focus-visible {
+    border-color: transparent;
+    color: #{{ site.color.button-hovered }};
 }
 
-.side-menu-list a {
-    display: block;
-    padding: calc(16px * var(--s)) calc(30px * var(--s));
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family: var(--font-main);
-    font-size: calc(18px * var(--s));
-    font-weight: 700;
-    text-decoration: none;
-    border-left: calc(4px * var(--s)) solid transparent;
-}
-
-.side-menu-list a:hover,
-.side-menu-list a:focus {
-    background: #{{ site.color.secondary-dark }};
-    color: #{{ site.color.accent }};
-    outline: 0;
-}
-
-/* The entry for the page you are on */
-.side-menu-list .active a {
-    color: #{{ site.color.accent }};
-    border-left-color: #{{ site.color.accent }};
+.nav-social .nav-social-btn:focus-visible::before {
+    transform: scale(1);
+    animation: shimmer-rbtn var(--shimmer) steps(1, end) infinite;
 }
 
 
-/* =====================================================================
-   5. HOME HEADER  (markup: _includes/header.html)
-   Picture on the left, name + tagline centered in the middle.
-   There is no colored background: the text sits on the page, and a thin
-   line (as long as the content) closes the header.
-   ===================================================================== */
 header {
-    --pic: calc(190px * var(--s));                            /* size of the picture (also the empty space kept on the right) */
+    --pic: calc(190px * var(--s));
     text-align: center;
-    color: #{{ site.color.secondary }};      /* text color of the header (color: secondary) */
+    color: #{{ site.color.text-color }};
 }
 
-/* The thin line closing the header (on the home page AND on the page banners, section 6) */
 header::after {
     content: "";
     display: block;
-    width: var(--content-w);                 /* as long as the content, not the whole screen */
-    height: 1px;
-    margin: 0 auto;
-    background: var(--rule);
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+    width: var(--content-w);
+    height: calc(var(--pline-h) + var(--shade-h));
+    margin: 0 auto calc(var(--line-w) - var(--pline-h) - var(--shade-h));
+    background:
+        var(--stipple-line) 0 0 / 100% var(--pline-h) no-repeat,
+        var(--stipple-shade) 0 var(--pline-h) / 100% var(--shade-h) no-repeat;
 }
 
-/* Same width as the sections below, so the picture sits above the Projects / Articles titles */
 header .container {
-    padding-top: calc(105px * var(--s));                      /* must stay larger than the top bar's height */
+    padding-top: calc(105px * var(--s));
     padding-bottom: calc(35px * var(--s));
 }
 
-/* Phones: picture on top, text below */
 header .header-flex {
     display: grid;
     grid-template-columns: 1fr;
@@ -630,39 +473,50 @@ header img {
     margin: 0;
 }
 
+.header-picture {
+    position: relative;
+    isolation: isolate;
+}
+
+.header-picture::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    inset: calc(var(--pic-out) * -100%);
+    background: var(--stipple-pic) 0 0 / 100% 100% no-repeat;
+}
+
 header .intro-text {
     text-align: center;
 }
 
 header .intro-text .name {
     display: block;
+    color: #{{ site.color.title-color }};
     font-family: var(--font-heading);
-    font-size: 2em;                          /* your name (phones) */
+    font-size: 2em;
     font-weight: 600;
     line-height: 1.15;
 }
 
 header .intro-text .skills {
     display: block;
-    font-size: 1.25em;                       /* the tagline under your name */
-    font-weight: 400;
-    color: rgba({{ site.color.secondary-rgb }},.82);
+    font-size: 1.4em;
+    font-weight: 600;
 }
 
-/* A link inside the tagline (for example your university) */
 header .intro-text .skills a {
-    color: #{{ site.color.primary }};
+    color: #{{ site.color.link-color }};
     text-decoration: underline;
     text-underline-offset: calc(3px * var(--s));
 }
 
 header .intro-text .skills a:hover,
 header .intro-text .skills a:focus-visible {
-    color: #{{ site.color.primary-dark }};
+    color: #{{ site.color.link-hovered }};
 }
 
-/* Tablets: picture on the left, text centered in the middle of the header.
-   The empty third column is as wide as the picture, which keeps the text exactly centered. */
 @media (min-width: 640px) {
     header {
         --pic: calc(140px * var(--s));
@@ -683,8 +537,6 @@ header .intro-text .skills a:focus-visible {
         grid-column: 2;
     }
 
-    /* Moves the name + tagline to the right on the HOME header only (not on the banners).
-       Use a negative number to move it left. */
     header:not(.page-header) .intro-text {
         position: relative;
         left: calc(60px * var(--s));
@@ -695,7 +547,6 @@ header .intro-text .skills a:focus-visible {
     }
 }
 
-/* Desktops: bigger picture and name */
 @media (min-width: 992px) {
     header {
         --pic: calc(190px * var(--s));
@@ -707,12 +558,6 @@ header .intro-text .skills a:focus-visible {
 }
 
 
-/* =====================================================================
-   6. PAGE BANNERS  (the title strip on Projects, Articles, Contact and on
-   every single project / article page). Same look as the home header:
-   no colored block, a thin line underneath (see "header::after" in section 5).
-   On a project page the tags appear in the banner, under the title.
-   ===================================================================== */
 header.page-header .container {
     padding-top: calc(110px * var(--s));
     padding-bottom: calc(40px * var(--s));
@@ -720,10 +565,9 @@ header.page-header .container {
 
 header.page-header .intro-text .name {
     margin: 0;
-    font-size: 2.25em;                       /* banner title */
+    font-size: 2.25em;
 }
 
-/* The tags in a project banner: centered, no box */
 header.page-header .tag-list {
     justify-content: center;
     margin: calc(20px * var(--s)) 0 0;
@@ -743,51 +587,68 @@ header.page-header .tag-list {
 }
 
 
-/* =====================================================================
-   7. SECTIONS, DIVIDER LINES, TEXT PAGES
-   ===================================================================== */
-
-/* A band of the page: Projects and Articles on the home page, and the body of the
-   Projects / Articles / Contact pages. All of them use the same background, and there
-   is no line between neighbouring sections (the space between them separates them). */
 .home-section {
     padding: calc(70px * var(--s)) 0 calc(80px * var(--s));
-    background: #{{ site.color.background }};
 }
 
-/* Pages that have a banner on top: a little less space above the cards */
 .home-section.list-page {
     padding: calc(60px * var(--s)) 0 calc(90px * var(--s));
 }
 
-/* Section title row ("Projects", "Articles"): aligned LEFT */
 .section-head {
+    position: relative;
+    isolation: isolate;
     margin-bottom: calc(30px * var(--s));
     text-align: left;
 }
 
+.section-head::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    right: 0;
+    bottom: var(--pline-h);
+    left: 0;
+    height: var(--shade-h);
+    background: var(--stipple-top) 0 0 / 100% 100% no-repeat;
+    transform: scaleY(-1);
+}
+
 .section-head h2 {
     margin: 0;
-    font-size: 2.4em;                        /* section title size */
+    font-size: 2.4em;
 }
 
-/* The divider line under each section title (markup: hr with class "section-line") */
 hr.section-line {
-    height: 0;
-    margin: calc(14px * var(--s)) 0 0;
+    height: var(--pline-h);
+    margin: calc(14px * var(--s)) 0 calc(var(--line-w) - var(--pline-h));
     border: 0;
-    border-top: 1px solid rgba({{ site.color.secondary-rgb }},.3);
+    background: var(--stipple-line) 0 0 / 100% 100% no-repeat;
 }
 
-/* The row under the cards that holds the "Read more" button, with a subtle line above it */
 .section-more {
+    position: relative;
+    isolation: isolate;
     margin-top: calc(40px * var(--s));
-    padding-top: calc(4px * var(--s));       /* the "Read more" text sits right below the line */
-    border-top: 1px solid var(--line);
-    text-align: right;                       /* ... at the right end of it */
+    padding-top: calc(4px * var(--s) + var(--line-w));
+    text-align: right;
 }
 
-/* Pages made of text: a single project or article (layouts: project.html, post.html) */
+.section-more::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: calc(var(--pline-h) + var(--shade-h));
+    background:
+        var(--stipple-line) 0 0 / 100% var(--pline-h) no-repeat,
+        var(--stipple-top) 0 var(--pline-h) / 100% var(--shade-h) no-repeat;
+}
+
 section.content-page {
     padding: calc(60px * var(--s)) 0 calc(80px * var(--s));
 }
@@ -796,38 +657,30 @@ section.content-page img {
     margin-bottom: calc(25px * var(--s));
 }
 
-/* Long web addresses (like the ones under "Resources") wrap instead of running off the screen */
 section.content-page a,
 section.content-page li,
 section.content-page p {
     overflow-wrap: anywhere;
 }
 
-/* Jumping to a heading from the table of contents leaves room for the fixed top bar */
 section.content-page [id] {
     scroll-margin-top: 90px;
 }
 
-/* Pictures and videos you put in an article or project (even with fixed width="..." in the tag)
-   never get wider than the text column, so they cannot push the page sideways on a phone. */
 section.content-page img,
 section.content-page video {
     max-width: 100%;
     height: auto;
 }
 
-/* Figures (picture/video + caption): images placed side by side with their own margin
-   (style="display:inline-block; margin:10px") can be a few pixels wider than the column;
-   this stops that from making the whole page scroll sideways. */
 section.content-page figure {
     overflow-x: hidden;
 }
 
 section.content-page .item-details {
-    margin: calc(30px * var(--s)) 0;                          /* the Client / Date / Service line on a project page */
+    margin: calc(30px * var(--s)) 0;
 }
 
-/* Headings and lists written in Markdown inside a project or article */
 section.content-page h2 {
     margin: calc(40px * var(--s)) 0 calc(15px * var(--s));
     font-size: 1.9em;
@@ -845,17 +698,10 @@ section.content-page ol {
 }
 
 
-/* =====================================================================
-   8. CARDS  (markup: _includes/card.html)
-   One card per project or article, used on the home page, the Projects
-   and Articles pages.
-   ===================================================================== */
-
-/* The grid of cards: 1 column on phones, 2 on tablets, 3 on desktops */
 .card-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: calc(30px * var(--s));                               /* space between cards */
+    gap: calc(30px * var(--s));
 }
 
 @media (min-width: 640px) {
@@ -871,47 +717,56 @@ section.content-page ol {
 }
 
 .card {
+    --out: {{ card_out | divided_by: 100.0 }};
+    --hole: calc(var(--out) / (1 + 2 * var(--out)) * 100%);
     position: relative;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     border-radius: calc(6px * var(--s));
-    background: #{{ site.color.card }};      /* card background (color: card) */
-    box-shadow: 0 calc(2px * var(--s)) calc(8px * var(--s)) rgba({{ site.color.secondary-rgb }},.12);    /* faint shadow at rest */
-    transition: box-shadow .25s ease, transform .25s ease;
+    color: #{{ site.color.background }};
+    background-color: #{{ site.color.card-background}};
+    background-size: 480px 480px;
+    background-repeat: repeat;
+    box-shadow: 0 calc(2px * var(--s)) calc(8px * var(--s)) color-mix(in srgb, #{{ site.color.shadow-particles-dark }} 12%, transparent);
+    transition: transform .25s ease;
 }
 
-/* Hover: the card lifts and gets a stronger, dark shadow.
-   Only on devices that really have a mouse (a tap on a phone would leave the card "hovered"),
-   and not while the page has just been opened or come back to with the Back button, until the
-   mouse moves again ("hover-off" is set by js/site.js). */
+.card::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    inset: calc(var(--out) * -100%);
+    background: var(--stipple-drop-1) 0 0 / 100% 100% no-repeat;
+    clip-path: polygon(evenodd,
+        0 0, 100% 0, 100% 100%, 0 100%, 0 0,
+        var(--hole) var(--hole), var(--hole) calc(100% - var(--hole)),
+        calc(100% - var(--hole)) calc(100% - var(--hole)), calc(100% - var(--hole)) var(--hole),
+        var(--hole) var(--hole));
+    transform: scale(0);
+}
+
 @media (hover: hover) {
     html:not(.hover-off) .card:hover {
         transform: translateY(calc(-3px * var(--s)));
-        box-shadow: 0 calc(16px * var(--s)) calc(32px * var(--s)) rgba({{ site.color.secondary-rgb }},.38);
+    }
+
+    html:not(.hover-off) .card:hover::after {
+        transform: scale(1);
+        animation: shimmer-drop var(--shimmer) steps(1, end) infinite;
     }
 }
 
-/* Keyboard users (Tab key): a ring around the whole card instead of the lift */
 .card-title a:focus-visible::after {
-    outline: 2px solid #{{ site.color.primary }};
+    outline: 2px solid #{{ site.color.link-color }};
     outline-offset: calc(2px * var(--s));
     border-radius: calc(6px * var(--s));
 }
 
-/* The picture area. Its shape matches the project pictures (900 x 650). */
 .card-media {
     display: block;
     aspect-ratio: 900 / 650;
     overflow: hidden;
-    background: #{{ site.color.background }};     /* only visible behind transparent pictures */
-}
-
-/* Article cards: ONE background color behind every article picture.
-   The pictures in img/articles/ are transparent icons, so this color shows through.
-   A fully opaque photo keeps its own colors. Change it here to restyle all article thumbnails. */
-.card-articles .card-media {
-    background: #{{ site.color.primary }};
+    border-radius: calc(6px * var(--s)) calc(6px * var(--s)) 0 0;
 }
 
 .card-media img {
@@ -922,7 +777,6 @@ section.content-page ol {
     object-fit: cover;
 }
 
-/* Shown instead of a picture when an item has no "img:" line */
 .card-placeholder {
     display: flex;
     align-items: center;
@@ -930,7 +784,7 @@ section.content-page ol {
     width: 100%;
     height: 100%;
     font-size: calc(48px * var(--s));
-    color: rgba({{ site.color.secondary-rgb }},.35);
+    color: #{{ site.color.background }};
 }
 
 .card-body {
@@ -938,16 +792,16 @@ section.content-page ol {
     padding: calc(14px * var(--s)) calc(20px * var(--s)) calc(12px * var(--s));
 }
 
-/* Small date under the picture */
 .card-date {
     display: block;
     font-size: calc(13px * var(--s));
     letter-spacing: calc(.5px * var(--s));
     text-transform: uppercase;
-    color: rgba({{ site.color.secondary-rgb }},.65);
+    color: #{{ site.color.background }};
 }
 
 .card-title {
+    color: #{{ site.color.background }};
     margin: calc(6px * var(--s)) 0 calc(8px * var(--s));
     font-size: calc(20px * var(--s));
     text-transform: none;
@@ -956,17 +810,10 @@ section.content-page ol {
 .card-title a,
 .card-title a:hover,
 .card-title a:focus {
-    color: #{{ site.color.secondary }};
+    color: #{{ site.color.background }};
     text-decoration: none;
 }
 
-@media (hover: hover) {
-    html:not(.hover-off) .card:hover .card-title a {
-        color: #{{ site.color.primary }};    /* title turns to the main color on hover */
-    }
-}
-
-/* The information text (description: in the project / article file) - at most 4 lines */
 .card-info {
     margin: 0;
     font-size: calc(16px * var(--s));
@@ -977,8 +824,6 @@ section.content-page ol {
     overflow: hidden;
 }
 
-/* THE WHOLE CARD IS ONE BIG LINK: the title's link is stretched over the whole card,
-   so a click anywhere on the card opens it. */
 .card-title a::after {
     content: "";
     position: absolute;
@@ -990,27 +835,33 @@ section.content-page ol {
 }
 
 
-/* =====================================================================
-   9. TAGS  (markup: _includes/tags.html, color and label of each tag: _data/tags.yml)
-   Tags are only labels: filled pills that do nothing when clicked.
-   Where they appear: the bottom of every card, the top (banner) of a project
-   page, the bottom of an article page.
-   ===================================================================== */
-
-/* The row of pills at the bottom of a card */
 .tag-list {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     gap: calc(6px * var(--s));
     margin: 0;
-    padding: calc(12px * var(--s)) calc(20px * var(--s)) calc(18px * var(--s));
+    padding: calc(12px * var(--s) + var(--line-w)) calc(20px * var(--s)) calc(18px * var(--s));
     list-style: none;
-    border-top: 1px solid var(--line);       /* subtle line above the tags */
 }
 
-/* One pill. Its fill color comes from _data/tags.yml; this is the default for tags not listed there. */
+.tag-list::before {
+    content: "";
+    position: absolute;
+    top: calc((var(--line-w) - var(--pline-h)) / 2);
+    right: 0;
+    left: 0;
+    height: var(--pline-h);
+    background: var(--stipple-line) 0 0 / 100% 100% no-repeat;
+}
+
+header.page-header .tag-list::before,
+.content-page .tag-list::before {
+    display: none;
+}
+
 .tag {
-    --tag-color: #{{ site.color.secondary }};
+    --tag-color: #{{ site.color.text-color }};
     display: inline-block;
     padding: calc(3px * var(--s)) calc(12px * var(--s));
     border-radius: 999px;
@@ -1022,7 +873,14 @@ section.content-page ol {
     background: var(--tag-color);
 }
 
-/* Tags on a single article page: no box, just the pills */
+.card .tag {
+    color: #{{ site.color.background }};
+}
+
+.card .tag-list::before {
+    background-image: var(--stipple-cline);
+}
+
 .content-page .tag-list {
     margin: calc(25px * var(--s)) 0;
     padding: 0;
@@ -1030,69 +888,70 @@ section.content-page ol {
 }
 
 
-/* =====================================================================
-   10. BUTTONS
-   ===================================================================== */
-
-/* Main button: the filled brick buttons on the Contact page (email, GitHub, itch.io, LinkedIn).
-   The "Read more" link below has its own plain-text style. */
-.btn-main,
-a.btn-main {
-    border: 1px solid #{{ site.color.primary }};
-    color: #fff;
-    background: #{{ site.color.primary }};
-    transition: background .2s ease, border-color .2s ease;
+.contact-links .btn-main,
+.contact-links .btn-main:focus,
+.contact-links .btn-main:active,
+.contact-links .btn-main:hover {
+    position: relative;
+    isolation: isolate;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+    color: #{{ site.color.button }};
+    font-size: calc(26px * var(--s));
+    text-decoration: none;
 }
 
-/* a mouse click leaves the button focused: keep it looking normal (see the note in section 3) */
-.btn-main:focus,
-a.btn-main:focus {
-    border-color: #{{ site.color.primary }};
-    color: #fff;
-    background: #{{ site.color.primary }};
+.contact-links .btn-main::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    inset: calc(var(--cbtn-out) * -100%);
+    background: var(--stipple-cbtn-1) 0 0 / 100% 100% no-repeat;
+    transform: scale(0);
 }
 
-.btn-main:hover,
-.btn-main:focus-visible,
-.btn-main:active,
-a.btn-main:hover {
-    border-color: #{{ site.color.primary-dark }};
-    color: #fff;
-    background: #{{ site.color.primary-dark }};     /* hover color (color: primary-dark) */
+@media (hover: hover) {
+    html:not(.hover-off) .contact-links .btn-main:hover {
+        border-color: transparent !important;
+        color: #{{ site.color.button-hovered }};
+    }
+
+    html:not(.hover-off) .contact-links .btn-main:hover::before {
+        transform: scale(1);
+        animation: shimmer-cbtn var(--shimmer) steps(1, end) infinite;
+    }
 }
 
-/* "Read more" at the end of the Projects / Articles sections (home page): just TEXT.
-   No box, no border, no shadow, no outline in ANY state, also not while it is being clicked.
-   Same color as the headlines (color: secondary); on hover it turns brick and gets an underline.
-   "!important" is used on purpose: Bootstrap adds its own focus ring and pressed shadow
-   with very strong rules, and nothing else beats them. */
+.contact-links .btn-main:focus-visible {
+    border-color: transparent !important;
+    color: #{{ site.color.button-hovered }};
+}
+
+.contact-links .btn-main:focus-visible::before {
+    transform: scale(1);
+    animation: shimmer-cbtn var(--shimmer) steps(1, end) infinite;
+}
+
 .section-more .btn-main,
 .section-more .btn-main:focus,
 .section-more .btn-main:active,
 .section-more .btn-main:active:focus,
 .section-more .btn-main:hover {
-    padding: calc(6px * var(--s)) 0;         /* no sideways padding: the text ends exactly where the line ends */
+    padding: calc(6px * var(--s)) 0;
     border: 0 !important;
     border-radius: 0;
     background: transparent !important;
     box-shadow: none !important;
     outline: 0 !important;
-    color: #{{ site.color.secondary }};
-    font-size: calc(22px * var(--s));        /* text size */
+    color: #{{ site.color.button }};
+    font-size: calc(25px * var(--s));
     font-weight: 600;
     text-decoration: none;
-    text-underline-offset: calc(4px * var(--s));
 }
 
-.section-more .btn-main:hover,
-.section-more .btn-main:active,
-.section-more .btn-main:active:focus,
-.section-more .btn-main:focus-visible {
-    color: #{{ site.color.primary-dark }};
-    text-decoration: underline;
-}
-
-/* The "All projects" / "All articles" back links on single pages: the same plain text look */
 .btn-default,
 .btn-default:focus,
 .btn-default:active,
@@ -1105,84 +964,127 @@ a.btn-main:hover {
     background: transparent !important;
     box-shadow: none !important;
     outline: 0 !important;
-    color: #{{ site.color.secondary }};
-    font-size: calc(19px * var(--s));        /* text size */
+    color: #{{ site.color.button }};
+    font-size: calc(22px * var(--s));
     font-weight: 600;
     text-decoration: none;
-    text-underline-offset: calc(4px * var(--s));
 }
 
-.btn-default:hover,
-.btn-default:active,
-.btn-default:active:hover,
+a.nav-btn,
+.section-more .btn-main,
+.btn-default {
+    position: relative;
+    isolation: isolate;
+}
+
+a.nav-btn::before,
+.section-more .btn-main::before,
+.btn-default::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    inset: calc(var(--btn-out) * -100%);
+    background: var(--stipple-btn-1) 0 0 / 100% 100% no-repeat;
+    transform: scale(0);
+}
+
+@media (hover: hover) {
+    html:not(.hover-off) a.nav-btn:hover::before,
+    html:not(.hover-off) .section-more .btn-main:hover::before,
+    html:not(.hover-off) .btn-default:hover::before {
+        transform: scale(1);
+        animation: shimmer-btn var(--shimmer) steps(1, end) infinite;
+    }
+
+    html:not(.hover-off) a.nav-btn:hover,
+    html:not(.hover-off) .section-more .btn-main:hover,
+    html:not(.hover-off) .btn-default:hover {
+        color: #{{ site.color.button-hovered }};
+        text-decoration: none;
+    }
+}
+
+a.nav-btn:focus-visible::before,
+.section-more .btn-main:focus-visible::before,
+.btn-default:focus-visible::before {
+    transform: scale(1);
+    animation: shimmer-btn var(--shimmer) steps(1, end) infinite;
+}
+
+a.nav-btn:focus-visible,
+.section-more .btn-main:focus-visible,
 .btn-default:focus-visible {
-    color: #{{ site.color.primary-dark }};
-    text-decoration: underline;
+    color: #{{ site.color.button-hovered }};
+    text-decoration: none;
 }
 
 
-/* =====================================================================
-   11. CONTACT PAGE  (markup: _includes/contact.html)
-   The row of buttons; which ones appear: footer_links in _config.yml
-   ===================================================================== */
 .contact-links {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: calc(14px * var(--s));
+    gap: calc(30px * var(--s));
     margin-top: calc(25px * var(--s));
 }
 
 
-/* =====================================================================
-   12. FOOTER  (markup: _includes/footer.html)
-   Just the credit text, centered, on the page background (no colored block).
-   A thin line above it, as long as the content, separates it from the page.
-   Normal footer by default: it appears at the end of the page, and on short
-   pages (like Contact) it still sits at the very bottom of the screen.
-   To make it an always-visible bar, see "FOOTER MODE" in section 1.
-   ===================================================================== */
 .site-footer {
     position: var(--footer-position);
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 1030;                           /* same level as the top bar */
-    margin-top: auto;                        /* pushes the footer down on short pages */
-    color: #{{ site.color.secondary }};
-    background: #{{ site.color.background }};
+    z-index: 1030;
+    margin-top: auto;
+    color: #{{ site.color.text-color }};
 }
 
-/* The thin line above the footer */
 .site-footer::before {
     content: "";
     display: block;
     width: var(--content-w);
-    height: 1px;
-    margin: 0 auto;
-    background: var(--rule);
+    height: var(--pline-h);
+    margin: 0 auto calc(var(--line-w) - var(--pline-h));
+    background: var(--stipple-line) 0 0 / 100% 100% no-repeat;
 }
 
 .footer-bar {
+    position: relative;
+    isolation: isolate;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(58px * var(--s));                        /* footer height */
+    min-height: calc(58px * var(--s));
     padding: calc(10px * var(--s)) calc(25px * var(--s));
     text-align: center;
 }
 
+.footer-bar::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: var(--stipple-top) 0 0 / 100% 100% no-repeat;
+}
+
 .footer-credit {
     margin: 0;
-    font-size: calc(14px * var(--s));
+    font-size: calc(0px * var(--s));
     line-height: 1.4;
-    opacity: .85;
 }
 
 .footer-credit a,
-.footer-credit a:hover,
-.footer-credit a:focus {  /* same color in every state, so nothing can stick */
-    color: #{{ site.color.primary }};
+.footer-credit a:focus {
+    color: #{{ site.color.link-color }};
+    text-decoration: underline;
+}
+
+.footer-credit a:hover {
+    color: #{{ site.color.link-hovered }};
     text-decoration: underline;
 }
 
@@ -1197,15 +1099,11 @@ a.btn-main:hover {
 }
 
 
-/* =====================================================================
-   13. SCROLL-TO-TOP BUTTON  (markup: end of _includes/footer.html)
-   The round arrow button, shown on phones and tablets only.
-   ===================================================================== */
 .scroll-top {
     z-index: 1049;
     position: fixed;
     right: calc(14px * var(--s));
-    bottom: calc(var(--footer-space) + (16px * var(--s)));    /* stays above the footer when it is a fixed bar */
+    bottom: calc(var(--footer-space) + (16px * var(--s)));
     width: calc(50px * var(--s));
     height: calc(50px * var(--s));
 }
@@ -1218,7 +1116,38 @@ a.btn-main:hover {
     line-height: calc(28px * var(--s));
 }
 
-/* Hidden while the slide-out menu is open */
-body.menu-open .scroll-top {
-    display: none;
+
+@keyframes shimmer-drop {
+    0%    { background-image: var(--stipple-drop-1); }
+    33.3% { background-image: var(--stipple-drop-2); }
+    66.6% { background-image: var(--stipple-drop-3); }
+}
+
+@keyframes shimmer-btn {
+    0%    { background-image: var(--stipple-btn-1); }
+    33.3% { background-image: var(--stipple-btn-2); }
+    66.6% { background-image: var(--stipple-btn-3); }
+}
+
+@keyframes shimmer-cbtn {
+    0%    { background-image: var(--stipple-cbtn-1); }
+    33.3% { background-image: var(--stipple-cbtn-2); }
+    66.6% { background-image: var(--stipple-cbtn-3); }
+}
+
+@keyframes shimmer-rbtn {
+    0%    { background-image: var(--stipple-rbtn-1); }
+    33.3% { background-image: var(--stipple-rbtn-2); }
+    66.6% { background-image: var(--stipple-rbtn-3); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card::after,
+    .contact-links .btn-main::before,
+    .nav-social .nav-social-btn::before,
+    a.nav-btn::before,
+    .section-more .btn-main::before,
+    .btn-default::before {
+        animation: none !important;
+    }
 }

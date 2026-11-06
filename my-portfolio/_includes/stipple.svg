@@ -1,0 +1,72 @@
+{%- comment -%}
+  Makes a picture of tiny particles whose DENSITY (not opacity) changes: more particles where the
+  "density map" is bright, fewer where it is dark. Every particle is fully solid.
+  Needs the helper file stipple-ramp.svg next to this one.
+  Parameters
+    color = particle color (hex, no #)        freq = particle size: smaller number = bigger particles (try 0.5 to 1.2)
+    seed  = a different random pattern        max  = most particles it can have, 0 to 1 (write 0.3, not .3)
+    lift  = raises the noise a little so that very LOW densities give very few particles (default 0; use 0.3 for a faint sprinkle)
+    stitch = write stitch="yes" when the picture will be REPEATED as a tile, so the tiles join without a seam
+    octaves = how much fine detail the noise has: 1 = smooth blobs, 2 = normal (default), 3 to 4 = crisper, more broken-up grains
+    shape = line  a band: dense along its middle row
+            down  dense at the top, thinning downward
+            rect  a rectangle: dense in the middle, thinning toward all four edges
+            radial  a round shape: dense out to a circle, then thinning toward the edge of the box
+    cover = how much of the box it covers, in percent (100 = all of it)
+            radial: how much of the radius is the thinning ring (33 = dense in the middle two thirds, thinning in the outer third)
+            line: how much of the LENGTH     down: how far DOWN it reaches     rect: how much of the box in both directions
+    fade  = percent of the covered length that thins out at each end (0 = a hard end, 50 = smooth all the way to the middle)
+    curve = the shape of the thinning: 1 = straight, 2 to 4 = soft (a long thin tail), -2 to -4 = firm (a short thin tail)
+{%- endcomment -%}
+{%- assign s_m = include.max | times: 100 | round -%}
+{%- assign s_cover = include.cover | default: 100 -%}
+{%- assign s_fade = include.fade | default: 14 -%}
+{%- assign s_curve = include.curve | default: 1 -%}
+{%- assign s_shape = include.shape -%}
+{%- assign s_color = include.color -%}
+{%- assign s_freq = include.freq -%}
+{%- assign s_seed = include.seed | default: 3 -%}
+<svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'>
+<defs>
+<filter id='f' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'>
+<feTurbulence type='fractalNoise' baseFrequency='{{ s_freq }}' numOctaves='{{ include.octaves | default: 2 }}' seed='{{ s_seed }}' stitchTiles='{% if include.stitch %}stitch{% else %}noStitch{% endif %}' result='t'/>
+{%- assign s_off = -0.8 | plus: include.lift -%}
+<feColorMatrix in='t' type='matrix' values='2.6 0 0 0 {{ s_off }}  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1' result='n'/>
+<feColorMatrix in='SourceGraphic' type='matrix' values='0 0 0 0 0  1 0 0 0 0  0 0 0 0 0  0 0 0 0 1' result='d'/>
+<feComposite in='n' in2='d' operator='arithmetic' k1='0' k2='1' k3='1' k4='0' result='nd'/>
+<feColorMatrix in='nd' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -100 100 0 0 0' result='m'/>
+<feFlood flood-color='#{{ s_color }}' result='c'/>
+<feComposite in='c' in2='m' operator='in'/>
+</filter>
+{%- if s_shape == 'radial' -%}
+{%- assign s_offset = 100 | minus: s_cover -%}
+<radialGradient id='gx' cx='.5' cy='.5' r='.5'>
+<stop offset='0%' stop-color='rgb({{ s_m }}%,{{ s_m }}%,{{ s_m }}%)'/>
+{% include stipple-ramp.svg kind="start" cover=s_cover offset=s_offset curve=s_curve scale=s_m out="gray" %}
+</radialGradient>
+{%- else -%}
+<linearGradient id='gx' x1='0' y1='0' x2='1' y2='0'>
+{%- if s_shape == 'down' -%}
+{% include stipple-ramp.svg kind="center" cover=100 fade=s_fade curve=s_curve scale=s_m out="gray" %}
+{%- else -%}
+{% include stipple-ramp.svg kind="center" cover=s_cover fade=s_fade curve=s_curve scale=s_m out="gray" %}
+{%- endif -%}
+</linearGradient>
+<linearGradient id='gy' x1='0' y1='0' x2='0' y2='1'>
+{%- if s_shape == 'line' -%}
+{% include stipple-ramp.svg kind="center" cover=100 fade=50 curve=s_curve out="opacity" %}
+{%- elsif s_shape == 'rect' -%}
+{% include stipple-ramp.svg kind="center" cover=s_cover fade=s_fade curve=s_curve out="opacity" %}
+{%- else -%}
+{% include stipple-ramp.svg kind="start" cover=s_cover curve=s_curve out="opacity" %}
+{%- endif -%}
+</linearGradient>
+{%- endif -%}
+</defs>
+<g filter='url(#f)'>
+<rect width='100%' height='100%' fill='url(#gx)'/>
+{%- if s_shape != 'radial' %}
+<rect width='100%' height='100%' fill='url(#gy)'/>
+{%- endif %}
+</g>
+</svg>

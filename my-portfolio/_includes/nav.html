@@ -1,22 +1,19 @@
 {% comment %}
-  TOP BAR + SLIDE-OUT MENU, on every page.
-  - Left: the three-line menu button. Right: your name ("nav_name" in _config.yml; if it is empty,
-    "title" is used), which links to the top of the home page,
-    and the round link buttons.
-  - The link buttons come from "footer_links" in _config.yml (an entry with an empty url is hidden).
-  - The menu entries (About, Projects, Articles, Contact) are written by hand at the bottom of this file.
-  - Opening / closing the menu is done by js/site.js; the look is in main.css (sections 3 and 4).
+  TOP BAR, on every page.
+  - Left: three buttons. Your name (nav_name in _config.yml; if empty, title is used) goes to the About (home) page,
+    Projects goes to the projects page, Blog goes to the articles page.
+  - Right: the round link buttons, from "footer_links" in _config.yml (an entry with an empty url is hidden).
+  - The look is in main.css, section 3.
 {% endcomment %}
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="nav-bar-inner">
-    <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-controls="side-menu" aria-expanded="false">
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
+    <ul class="nav-links">
+      <li><a class="nav-btn" href="{{ '/#page-top' | relative_url }}">{{ site.nav_name | default: site.title }}</a></li>
+      <li><a class="nav-btn" href="{{ '/projects/' | relative_url }}">Projects</a></li>
+      <li><a class="nav-btn" href="{{ '/articles/' | relative_url }}">Blog</a></li>
+    </ul>
 
     <div class="nav-right">
-      <a class="navbar-brand" href="{{ '/#page-top' | relative_url }}">{{ site.nav_name | default: site.title }}</a>
       <ul class="nav-social">
         {% for link in site.footer_links %}
         {% if link.url and link.url != "" %}
@@ -29,24 +26,3 @@
     </div>
   </div>
 </nav>
-
-{% comment %} The dark layer behind the menu, and the menu panel itself (hidden until the button is clicked) {% endcomment %}
-<div class="menu-overlay" id="menu-overlay"></div>
-<aside class="side-menu" id="side-menu" aria-label="Main menu" aria-hidden="true">
-  <button type="button" class="menu-close" id="menu-close" aria-label="Close menu">&times;</button>
-  <ul class="side-menu-list">
-    {% comment %} To add or rename an entry, edit the list items below. "active" highlights the current page. {% endcomment %}
-    <li{% if page.url == '/' %} class="active"{% endif %}>
-      <a href="{{ '/#page-top' | relative_url }}">About</a>
-    </li>
-    <li{% if page.url contains '/projects' %} class="active"{% endif %}>
-      <a href="{{ '/projects/' | relative_url }}">Projects</a>
-    </li>
-    <li{% if page.url contains '/articles' %} class="active"{% endif %}>
-      <a href="{{ '/articles/' | relative_url }}">Articles</a>
-    </li>
-    <li{% if page.url contains '/contact' %} class="active"{% endif %}>
-      <a href="{{ '/contact/' | relative_url }}">Contact</a>
-    </li>
-  </ul>
-</aside>

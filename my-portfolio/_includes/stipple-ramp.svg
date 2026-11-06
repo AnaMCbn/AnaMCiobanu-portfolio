@@ -1,0 +1,65 @@
+{%- comment -%}
+  Helper for stipple.svg: writes the <stop> lines of one fade profile. You do not need to edit this file.
+    kind  = center (full in the middle, thinning toward both ends) | start (full at the start, thinning to nothing at "cover" percent)
+    cover = percent of the length that is covered     fade = percent of the covered length that thins out at each end (center only, at most 50)
+    curve = how it thins: 1 = straight line, 2 to 4 = soft (a long thin tail), -2 to -4 = firm (a short thin tail),
+            smooth = an S-shaped fade, gentle at both ends, with no visible edge
+    scale = highest value, in percent (used by "gray")     out = gray (a density map) | opacity (a darkening overlay)
+    offset = moves the whole fade this many percent further along (used for round shapes, default 0)
+{%- endcomment -%}
+{%- assign r_cov = include.cover | default: 100 | plus: 0 | at_most: 100 | at_least: 1 -%}
+{%- assign r_fd = include.fade | default: 14 | plus: 0 | at_most: 50 | at_least: 0 -%}
+{%- assign r_cur = include.curve | default: 1 | plus: 0 -%}
+{%- assign r_pw = r_cur | abs -%}
+{%- assign r_sc = include.scale | default: 100 | plus: 0 -%}
+{%- assign r_off = include.offset | default: 0 | plus: 0 -%}
+{%- if include.kind == 'start' -%}
+  {%- assign r_sides = 1 -%}
+  {%- assign r_span = r_cov -%}
+  {%- assign r_from = 0 -%}
+{%- else -%}
+  {%- assign r_sides = 2 -%}
+  {%- assign r_span = r_cov | times: r_fd | divided_by: 100.0 -%}
+  {%- assign r_from = 100 | minus: r_cov | divided_by: 2.0 -%}
+  <stop offset='0%' {% if include.out == 'gray' %}stop-color='#000'{% else %}stop-color='#000' stop-opacity='1'{% endif %}/>
+{%- endif -%}
+{%- for r_side in (1..r_sides) -%}
+{%- for r_i in (0..8) -%}
+  {%- assign r_u = r_i | divided_by: 8.0 -%}
+  {%- if include.kind == 'start' -%}
+    {%- assign r_t = 1.0 | minus: r_u -%}
+    {%- assign r_pos = r_span | times: r_u | plus: r_off -%}
+  {%- elsif r_side == 1 -%}
+    {%- assign r_t = r_u -%}
+    {%- assign r_pos = r_span | times: r_u | plus: r_from -%}
+  {%- else -%}
+    {%- assign r_t = 1.0 | minus: r_u -%}
+    {%- assign r_pos = r_span | times: r_u | plus: r_from | plus: r_cov | minus: r_span -%}
+  {%- endif -%}
+  {%- if include.curve == 'smooth' -%}
+    {%- assign r_t2 = r_t | times: r_t -%}
+    {%- assign r_d = r_t | times: -2.0 | plus: 3.0 | times: r_t2 -%}
+  {%- elsif r_cur > 1 -%}
+    {%- assign r_d = 1.0 -%}
+    {%- for r_k in (1..r_pw) -%}{%- assign r_d = r_d | times: r_t -%}{%- endfor -%}
+  {%- elsif r_cur < -1 -%}
+    {%- assign r_q = 1.0 | minus: r_t -%}
+    {%- assign r_d = 1.0 -%}
+    {%- for r_k in (1..r_pw) -%}{%- assign r_d = r_d | times: r_q -%}{%- endfor -%}
+    {%- assign r_d = 1.0 | minus: r_d -%}
+  {%- else -%}
+    {%- assign r_d = r_t -%}
+  {%- endif -%}
+  {%- if include.out == 'gray' -%}
+    {%- assign r_v = r_d | times: r_sc | round -%}
+    <stop offset='{{ r_pos | round: 2 }}%' stop-color='rgb({{ r_v }}%,{{ r_v }}%,{{ r_v }}%)'/>
+  {%- else -%}
+    <stop offset='{{ r_pos | round: 2 }}%' stop-color='#000' stop-opacity='{{ 1.0 | minus: r_d | round: 3 }}'/>
+  {%- endif -%}
+{%- endfor -%}
+{%- endfor -%}
+{%- if include.out == 'gray' -%}
+<stop offset='100%' stop-color='#000'/>
+{%- else -%}
+<stop offset='100%' stop-color='#000' stop-opacity='1'/>
+{%- endif -%}

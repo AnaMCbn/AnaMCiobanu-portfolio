@@ -54,14 +54,18 @@ bing_verify:
 # These are used in _includes/css/main.css, so changing one changes the whole site.
 # ---------------------------------------------------------------------
 color:
-  primary: 8A6A6A
-  primary-dark: 614848 
-  secondary: 515C47
-  secondary-rgb: "108,123,95"
-  secondary-dark: 49523D
-  accent: F0EC93
-  background: F5F5F5
-  card: E5E2E2
+  title-color: 2E3037
+  text-color: 2E3037
+  link-color: 525354
+  link-hovered: 46474A
+  button: 2E3037
+  button-hovered: EBE5CE
+  background: EBE5CE
+  bg-particles: 717170
+  shadow-particles: 2E3037
+  shadow-particles-dark: 2E3037
+  card-background: 46474A
+  lines: "46,48,55"
 
 
 # ---------------------------------------------------------------------

@@ -8,7 +8,9 @@
 <header>
   <div class="container">
     <div class="header-flex">
-      <img class="header-picture" src="{{ '/img/profile.png' | relative_url }}" alt="{{ site.header_name | default: site.title }}" />
+            <div class="header-picture">
+        <img src="{{ '/img/profile.png' | relative_url }}" alt="{{ site.header_name | default: site.title }}" />
+      </div>
       <div class="intro-text">
         <span class="name">{{ site.header_name | default: site.title }}</span>
         <span class="skills">{{ site.skills }}</span>
