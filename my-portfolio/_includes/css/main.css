@@ -1191,3 +1191,12 @@ a.nav-btn:focus-visible,
         scroll-margin-top: 130px;
     }
 }
+@media (max-width: 639px) {
+    .navbar::before {
+        display: none;
+    }
+
+    header::after {
+        background: var(--stipple-line) 0 0 / 100% var(--pline-h) no-repeat;   /* keeps the line, drops the shade under it */
+    }
+}
