@@ -2,9 +2,9 @@
 layout: default
 ---
 {% comment %}
-  LAYOUT OF ONE ARTICLE PAGE (used by every file in _posts/ through "layout: post").
-  Fields read from the article's front matter: title, date (from the filename),
-  img (picture in img/articles/), alt, tags. The text below the --- lines is the article.
+  LAYOUT OF ONE post PAGE (used by every file in _posts/ through "layout: post").
+  Fields read from the post's front matter: title, date (from the filename),
+  img (picture in img/posts/), alt, tags. The text below the --- lines is the post.
 {% endcomment %}
 <header class="page-header">
   <div class="container">
@@ -12,7 +12,8 @@ layout: default
       <div class="col-lg-12">
         <div class="intro-text">
           <h1 class="name">{{ page.title }}</h1>
-          <span class="skills">{{ page.date | date: "%B %-d, %Y" }} &middot; {{ content | number_of_words | divided_by: 200 | plus: 1 }} min read</span>
+            <span class="skills">{{ page.date | date: "%B %-d, %Y" }} &middot; {{ content | number_of_words | divided_by: 200 | plus: 1 }} min read</span>
+          {% include tags.html tags=page.tags %}
         </div>
       </div>
     </div>
@@ -24,15 +25,15 @@ layout: default
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2">
         {% if page.img %}
-        <img src="{{ '/img/articles/' | append: page.img | relative_url }}" class="img-responsive img-centered" alt="{{ page.alt | default: page.title }}">
+        <img src="{{ '/img/posts/' | append: page.img | relative_url }}" class="img-responsive img-centered" alt="{{ page.alt | default: page.title }}">
         {% endif %}
+
 
         {{ content }}
 
         <hr>
-        {% include tags.html tags=page.tags %}
 
-        <a href="{{ '/articles/' | relative_url }}" class="btn btn-default"><i class="fa fa-arrow-left"></i> All articles</a>
+        <a href="{{ '/posts/' | relative_url }}" class="btn btn-default"><i class="fa fa-arrow-left"></i> All posts</a>
       </div>
     </div>
   </div>

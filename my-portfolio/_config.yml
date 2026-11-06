@@ -104,8 +104,8 @@ theme_credit:
 # ---------------------------------------------------------------------
 markdown: kramdown
 
-# Articles are the files in _posts/. This makes their addresses look like /articles/my-title/
-permalink: /articles/:title/
+# Posts are the files in _posts/. This makes their addresses look like /posts/my-title/
+permalink: /posts/:title/
 
 # Projects are the files in _projects/. Each one becomes its own page: /projects/name/
 collections:

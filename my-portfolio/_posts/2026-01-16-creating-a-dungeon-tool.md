@@ -1,9 +1,9 @@
 ---
 # ---- WHAT EACH LINE DOES (this file is a template: copy it to make a new article) ----
-# The file NAME sets the date and the address: YYYY-MM-DD-title.md  ->  /articles/title/
+# The file NAME sets the date and the address: YYYY-MM-DD-title.md  ->  /posts/title/
 layout: post               # keep as is. Page layout: _layouts/post.html (this is what makes it an "article")
 title: Creating a tool for procedurally generating dungeons from a graph    # The name on the card and at the top of the article page
-img: dungeon-tool/output3.png         # The picture, a file in img/articles/ (leave the line out for a plain placeholder)
+img: dungeon-tool/output3.png         # The picture, a file in img/posts/ (leave the line out for a plain placeholder)
 alt: dungeon tool screenshot   # Describes the picture for screen readers and Google
 tags: [PCG,Uni]            # Tags on the card and the page. Colors/labels: _data/tags.yml
 description: "This article will go over the process of developing a tool for procedural dungeon generation: how to create a framework that allows for quick testing and concepting with enough control of the overall level."   # The text on the card (max 4 lines)
@@ -25,10 +25,9 @@ description: "This article will go over the process of developing a tool for pro
    - [Future Work](#future-work)
 8. [Resources and Further Reading](#resources-and-further-reading)
 
----
 
 <figure style="text-align: center;">
-  <img src="{{ '/img/articles/dungeon-tool/tool.gif' | relative_url }}" width="640" height="360" alt="Dungeon generation tool demo">
+  <img src="{{ '/img/posts/dungeon-tool/tool.gif' | relative_url }}" width="640" height="360" alt="Dungeon generation tool demo">
   <figcaption>Demo of the dungeon generation tool in action</figcaption>
 </figure>
 
@@ -212,7 +211,7 @@ for (const ogdf::node node: G.nodes) {
 ```
 <figure style="text-align: center;">
   <video width="640" height="360" controls>
-    <source src="{{ '/img/articles/dungeon-tool/nopulling.mp4' | relative_url }}" type="video/mp4">
+    <source src="{{ '/img/posts/dungeon-tool/nopulling.mp4' | relative_url }}" type="video/mp4">
   </video>
   <figcaption>This is how the output should look now, with road generation but no further room processing</figcaption>
 </figure>
@@ -319,7 +318,7 @@ return {}; // No path found
 
 <figure style="text-align: center;">
   <video width="640" height="360" controls>
-    <source src="{{ '/img/articles/dungeon-tool/adding_template.mp4' | relative_url }}" type="video/mp4">
+    <source src="{{ '/img/posts/dungeon-tool/adding_template.mp4' | relative_url }}" type="video/mp4">
   </video>
   <figcaption>Adding a room template</figcaption>
 </figure>
@@ -367,11 +366,11 @@ dungeon.rooms[dungeon.grid->cells[i].roomId]
  ```
 
 <figure style="text-align: center;">
-  <img src="{{ '/img/articles/dungeon-tool/output1.png' | relative_url }}" width="400" height="225" alt="Output example 1" style="display: inline-block; width: 47%; margin: 1%;">
-  <img src="{{ '/img/articles/dungeon-tool/output2.png' | relative_url }}" width="400" height="225" alt="Output example 2" style="display: inline-block; width: 47%; margin: 1%;">
+  <img src="{{ '/img/posts/dungeon-tool/output1.png' | relative_url }}" width="400" height="225" alt="Output example 1" style="display: inline-block; width: 47%; margin: 1%;">
+  <img src="{{ '/img/posts/dungeon-tool/output2.png' | relative_url }}" width="400" height="225" alt="Output example 2" style="display: inline-block; width: 47%; margin: 1%;">
   <br>
-  <img src="{{ '/img/articles/dungeon-tool/output3.png' | relative_url }}" width="400" height="225" alt="Output example 3" style="display: inline-block; width: 47%; margin: 1%;">
-  <img src="{{ '/img/articles/dungeon-tool/output4.png' | relative_url }}" width="400" height="225" alt="Output example 4" style="display: inline-block; width: 47%; margin: 1%;"> 
+  <img src="{{ '/img/posts/dungeon-tool/output3.png' | relative_url }}" width="400" height="225" alt="Output example 3" style="display: inline-block; width: 47%; margin: 1%;">
+  <img src="{{ '/img/posts/dungeon-tool/output4.png' | relative_url }}" width="400" height="225" alt="Output example 4" style="display: inline-block; width: 47%; margin: 1%;"> 
   <figcaption>Some possible outputs shown in the editor</figcaption>
 </figure>
 

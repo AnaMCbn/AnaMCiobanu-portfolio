@@ -1,0 +1,17 @@
+{% comment %}
+  HOME PAGE: the "posts" section = the newest 3 posts + a "Read more" button.
+  Same look as the Projects section above it. To show more or fewer cards, change limit=3.
+  posts: the files in _posts/ (only those with "layout: post").
+{% endcomment %}
+<section id="posts" class="home-section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Blog posts</h2>
+      <hr class="section-line">
+    </div>
+    {% include posts_grid.html limit=3 %}
+    <div class="section-more">
+      <a href="{{ '/posts/' | relative_url }}" class="btn btn-main btn-lg">Show all</a>
+    </div>
+  </div>
+</section>

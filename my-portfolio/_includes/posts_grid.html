@@ -1,0 +1,16 @@
+{% comment %}
+  A GRID OF post CARDS (newest first). posts = the files in _posts/ that have "layout: post".
+    {% include post_grid.html limit=3 %}   -> newest 3  (home page)
+    {% include post_grid.html %}           -> all       (posts page)
+{% endcomment %}
+{% assign grid_posts = site.posts | where: "layout", "post" %}
+{% if include.limit %}
+  {% assign grid_posts = grid_posts | slice: 0, include.limit %}
+{% endif %}
+<div class="card-grid">
+  {% for post in grid_posts %}
+  {% include card.html item=post dir="posts" %}
+  {% else %}
+  <p>No blog posts yet.</p>
+  {% endfor %}
+</div>

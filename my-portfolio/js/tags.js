@@ -6,7 +6,7 @@
    address (for example /tags/#web) and then:
      - highlights that tag's chip at the top (adds the class "active"),
      - hides every card whose data-tags list does not contain the tag,
-     - hides a whole block (Projects / Articles) when none of its cards match.
+     - hides a whole block (Projects / posts) when none of its cards match.
    Each card's data-tags is written by _includes/card.html from the item's "tags:".
    Every tag on a card links to /tags/#tagname, which is how clicking a tag lands here.
    Without JavaScript nothing breaks: the page simply shows all cards.

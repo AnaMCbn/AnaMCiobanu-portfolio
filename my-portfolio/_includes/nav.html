@@ -1,7 +1,7 @@
 {% comment %}
   TOP BAR, on every page.
   - Left: three buttons. Your name (nav_name in _config.yml; if empty, title is used) goes to the About (home) page,
-    Projects goes to the projects page, Blog goes to the articles page.
+    Projects goes to the projects page, Blog goes to the posts page.
   - Right: the round link buttons, from "footer_links" in _config.yml (an entry with an empty url is hidden).
   - The look is in main.css, section 3.
 {% endcomment %}
@@ -10,7 +10,7 @@
     <ul class="nav-links">
       <li><a class="nav-btn" href="{{ '/#page-top' | relative_url }}">{{ site.nav_name | default: site.title }}</a></li>
       <li><a class="nav-btn" href="{{ '/projects/' | relative_url }}">Projects</a></li>
-      <li><a class="nav-btn" href="{{ '/articles/' | relative_url }}">Blog</a></li>
+      <li><a class="nav-btn" href="{{ '/posts/' | relative_url }}">Blog</a></li>
     </ul>
 
     <div class="nav-right">

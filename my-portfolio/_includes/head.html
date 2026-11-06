@@ -1,7 +1,7 @@
 {% comment %}
   <head> of every page: title, description for search engines, the stylesheet and the fonts.
   Where the values come from: _config.yml (title, description, keywords, meta_author)
-  and, for single projects / articles, their own "description:" line.
+  and, for single projects / posts, their own "description:" line.
 {% endcomment %}
 <head>
   <meta charset="utf-8">
@@ -12,7 +12,7 @@
   {% if site.meta_author %}
   <meta name="author" content="{{ site.meta_author }}">{% endif %}
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
-  <link rel="alternate" type="application/atom+xml" title="Articles" href="{{ '/feed.xml' | relative_url }}">
+  <link rel="alternate" type="application/atom+xml" title="Blog posts" href="{{ '/feed.xml' | relative_url }}">
 
   {% comment %} The site's CSS: /style.css is built from bootstrap.min.css + main.css {% endcomment %}
   <link rel="stylesheet" href="{{ '/style.css' | relative_url }}">

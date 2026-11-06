@@ -1,12 +1,12 @@
 {% comment %}
-  One card (picture, date, title, information, tags). Used for projects AND articles.
+  One card (picture, date, title, information, tags). Used for projects AND posts.
   The whole card is one big link (see ".card-title a::after" in main.css). The tags at the bottom are only labels.
   Usage: {% include card.html item=project dir="portfolio" %}
-         {% include card.html item=post dir="articles" %}
+         {% include card.html item=post dir="posts" %}
   "dir" is the folder inside /img/ that holds the picture named in the item's "img:" field.
 {% endcomment %}
 {% assign item = include.item %}
-<article class="card card-{{ include.dir }}">
+<post class="card card-{{ include.dir }}">
   <a href="{{ item.url | relative_url }}" class="card-media" tabindex="-1" aria-hidden="true">
     {% if item.img %}
     <img src="{{ '/img/' | append: include.dir | append: '/' | append: item.img | relative_url }}" alt="{{ item.alt | default: item.title }}">
@@ -20,4 +20,4 @@
     <p class="card-info">{{ item.description | default: item.excerpt | strip_html | strip }}</p>
   </div>
   {% include tags.html tags=item.tags %}
-</article>
+</post>
