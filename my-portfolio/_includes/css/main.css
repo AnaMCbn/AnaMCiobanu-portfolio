@@ -484,7 +484,6 @@ header img {
     z-index: -1;
     pointer-events: none;
     inset: calc(var(--pic-out) * -100%);
-    background: var(--stipple-pic) 0 0 / 100% 100% no-repeat;
 }
 
 header .intro-text {
